@@ -1,30 +1,36 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useHistory } from "react-router-dom";
-import Container from '@material-ui/core/Container';
+import { withStyles } from "@material-ui/core/styles";
+import { withRouter } from "react-router-dom";
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import BookmarksRoundedIcon from '@material-ui/icons/BookmarksRounded';
+import PowerSettingsNewRoundedIcon from '@material-ui/icons/PowerSettingsNewRounded';
+
+import Shops from './shops';
+import {Route,Switch,Redirect} from 'react-router-dom';
+import BookNewSlot from './bookSlot/BookSlot';
+import SignIn from './pages/signin';
+import MyBookings from './myBookings';
 
 
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (theme) => ({
   root: {
     display: 'flex',
   },
@@ -60,54 +66,54 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(15),
     margin: 'auto',
   },
-}));
+});
 
-function Sidebar(props) {
-  const data = [
-      {path:"/profile", label:"Profile"},
-      {path:"/dashboard", label:"Dashboard"},
-      {path:"/bookings", label:"Bookings"},
-      {path:"/logout", label:"Logout"}
-  ];
-  const { window } = props;
-  const classes = useStyles();
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  let history = useHistory();
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+class Sidebar extends Component {
+  state = { 
+    data:[
+      {path:"/profile", label:"Profile",icon:<AccountBoxIcon/>},
+      {path:"/dashboard", label:"Dashboard",icon:<DashboardIcon/>},
+      {path:"/bookings", label:"Bookings",icon:<BookmarksRoundedIcon/>},
+      {path:"/logout", label:"Logout",icon:<PowerSettingsNewRoundedIcon/>}
+    ],
+    mobileOpen:false,
+  }
 
-  const handleClick = path => {
-    history.push(path);
-    console.log(path,props);
-  };
+  handleDrawerToggle = () => {
+    this.setState({mobileOpen:(!this.state.mobileOpen)});
+  }
 
-  const drawer = (
+  handleClick = path => {
+    this.props.history.push(path);
+  }
+
+  drawer = (
     <div>
-      <div className={classes.toolbar} style={{padding:10}}>
-      <Avatar src={props.userData.imageUrl} className={classes.largeAvatar}/>
+      <div className={this.props.classes.toolbar} style={{padding:10}}>
+      <Avatar src={this.props.userData.imageUrl} className={this.props.classes.largeAvatar}/>
+      <br/>
       <Typography variant="h5" component="h2" align="center">
-        {props.userData.userName}
+        {this.props.userData.userName}
       </Typography>
-      {/* <Chip variant="outlined" color="primary" label={props.userData.userName} avatar={<Avatar src={props.userData.imageUrl} />} /> */}
       </div>
       <Divider />
       <List>
-        {data.map((item, index) => (
-          <ListItem button key={index}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText onClick={() => handleClick(item.path)} primary={item.label}/>
+        {this.state.data.map((item, index) => (
+          <ListItem button key={index} onClick={() => this.handleClick(item.path)}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.label}/>
           </ListItem>
         ))}
       </List>
     </div>
-  );
+  )
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  render() { 
+    const {window,classes,theme} = this.props;
+    const container = window !== undefined ? () => window().document.body : undefined;
 
-  return (
+    return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
@@ -116,25 +122,24 @@ function Sidebar(props) {
             color="inherit"
             aria-label="open drawer"
             edge="start"
-            onClick={handleDrawerToggle}
+            onClick={this.handleDrawerToggle}
             className={classes.menuButton}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Responsive drawer
+            ShopSafeJU
           </Typography>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
+            open={this.state.mobileOpen}
+            onClose={this.handleDrawerToggle}
             classes={{
               paper: classes.drawerPaper,
             }}
@@ -142,7 +147,7 @@ function Sidebar(props) {
               keepMounted: true, // Better open performance on mobile.
             }}
           >
-            {drawer}
+            {this.drawer}
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -153,12 +158,24 @@ function Sidebar(props) {
             variant="permanent"
             open
           >
-            {drawer}
+            {this.drawer}
           </Drawer>
         </Hidden>
       </nav>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        <Switch>
+          <Route path="/profile" component={SignIn}/>
+          
+          <Route path="/dashboard" component={Shops}/>
+          <Route path="/booknewslot/:uid" component={BookNewSlot}/>
+          <Route path="/bookings/" component={MyBookings}/>
+          <Route path="/" component={Shops}/>
+      </Switch>
+      </main>
     </div>
   );
+  }
 }
 
-export default Sidebar;
+export default withRouter(withStyles(useStyles, { withTheme: true })(Sidebar));

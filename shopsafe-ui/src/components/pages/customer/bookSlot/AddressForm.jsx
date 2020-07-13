@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { getUserDetails } from '../../utils/auth';
+import { getUserDetails } from '../../../../utils/auth';
 
 
 
@@ -97,14 +97,14 @@ class AddressForm extends Component {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <FormControlLabel
               control={
-                <Checkbox color="secondary" name="saveAddress" value="yes" />
+                <Checkbox color="secondary" name="saveAddress" value="yes" onChange={this.props.onCheck}/>
               }
               label="Use this address for payment details"
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </React.Fragment>
     );

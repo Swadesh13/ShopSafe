@@ -11,7 +11,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { withStyles } from "@material-ui/core/styles";
-import Alert from '@material-ui/lab/Alert';
 
 
 const Joi = require('@hapi/joi');
@@ -67,13 +66,13 @@ class SignIn extends Component {
 
     handleChange = ({currentTarget:input}) => {
         const data = {...this.state.data};
-        const errorMessage = this.validateProperty(input);
-        if(errorMessage){
-            this.setState({errors:{[input.name]:errorMessage}});
-        }else this.setState({errors:{[input.name]:""}});
+        // const errorMessage = this.validateProperty(input);
+        // if(errorMessage){
+        //     this.setState({errors:{[input.name]:errorMessage}});
+        // }else this.setState({errors:{[input.name]:""}});
         data[input.name] = input.value;
         this.setState({data});
-        console.log(this.state.errors);
+        //console.log(this.state.errors);
     };
 
     validate = () => {
@@ -96,11 +95,16 @@ class SignIn extends Component {
         this.doSubmit();
     }
 
+    handleSignup = () => {
+        this.props.history.push("/signup")
+    }
+
     doSubmit = () => {
-        console.log("Submitted");
+        console.log("Submitted",this.state.data);
     }
 
     render() { 
+        console.log(this.props);
         const {classes} = this.props;
         const {errors} = this.state;
 
@@ -118,9 +122,10 @@ class SignIn extends Component {
                 <TextField
                     variant="outlined"
                     margin="normal"
-                    required
+                    //required
                     fullWidth
                     id="email"
+                    type="email"
                     label="Email Address"
                     name="username"
                     autoComplete="email"
@@ -133,7 +138,7 @@ class SignIn extends Component {
                 <TextField
                     variant="outlined"
                     margin="normal"
-                    required
+                    //required
                     fullWidth
                     name="password"
                     label="Password"
@@ -165,7 +170,7 @@ class SignIn extends Component {
                     </Link>
                     </Grid>
                     <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link onClick={this.handleSignup} variant="body2" style={{cursor:"pointer"}}>
                         {"Don't have an account? Sign Up"}
                     </Link>
                     </Grid>

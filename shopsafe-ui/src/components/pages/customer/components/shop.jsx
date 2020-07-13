@@ -19,7 +19,7 @@ import { withRouter } from "react-router-dom";
 
 const useStyles = (theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 475,
   },
   media: {
     height: 0,
@@ -45,14 +45,22 @@ class Shop extends Component {
     state = {  }
 
     handleClick = () => {
-      this.props.history.push(`/bookings/${this.props.data.uid}`);
+      this.props.history.push(`/customer/booknewslot/${this.props.data.uid}`);
       console.log("Loved");
+    }
+
+    time = t => {
+      let d = new Date();
+      d.setHours(t.hour);
+      d.setMinutes(t.minute);
+      d.setSeconds(0);
+      return d.toLocaleTimeString();
     }
 
     render() { 
         const {classes} = this.props;
-        const {name,address,imgUrl,itemsAvailable,ratings,openingTime,closingTime} = this.props.data;
-
+        const {name,address,imgUrl,itemsAvailable,ratings,shopSchedule,} = this.props.data;
+        const {openingTime,closingTime} = shopSchedule;
         return (
             <Card className={classes.root}>
             <CardHeader
@@ -67,7 +75,7 @@ class Shop extends Component {
                 </IconButton>
                 }
                 title={name}
-                subheader={`${openingTime}-${closingTime}`}
+                subheader={`${this.time(openingTime)}-${this.time(closingTime)}`}
             />
             <CardMedia
                 className={classes.media}
@@ -86,12 +94,12 @@ class Shop extends Component {
                     variant="outlined"
                 />
                 )}
-                
+                <br/><br/>
                 <Typography variant="body2" color="textSecondary" component="p">{address}</Typography>
             </CardContent>
             <CardActions disableSpacing>
                 <Rating name="half-rating-read" defaultValue={ratings} precision={0.5} readOnly />
-                <IconButton aria-label="settings" edge="end" onClick={this.handleClick}>
+                <IconButton aria-label="settings" edge="end" onClick={this.handleClick}  >
                     <AddCircleRoundedIcon color="secondary" fontSize="large" />
                 </IconButton>
             </CardActions>

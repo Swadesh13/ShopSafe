@@ -22,7 +22,10 @@ import PowerSettingsNewRoundedIcon from '@material-ui/icons/PowerSettingsNewRoun
 
 import Shops from './shops';
 import {Route,Switch,Redirect} from 'react-router-dom';
-import BookNewSlot from './bookSlot/Checkout';
+import BookNewSlot from './bookSlot/BookSlot';
+import SignIn from '../../pages/signin';
+import MyBookings from './myBookings';
+
 
 
 const drawerWidth = 240;
@@ -66,13 +69,13 @@ const useStyles = (theme) => ({
 });
 
 
-class Sidebar extends Component {
+class MainPage extends Component {
   state = { 
     data:[
-      {path:"/profile", label:"Profile",icon:<AccountBoxIcon/>},
-      {path:"/dashboard", label:"Dashboard",icon:<DashboardIcon/>},
-      {path:"/bookings", label:"Bookings",icon:<BookmarksRoundedIcon/>},
-      {path:"/logout", label:"Logout",icon:<PowerSettingsNewRoundedIcon/>}
+      {path:"/customer/profile", label:"Profile",icon:<AccountBoxIcon/>},
+      {path:"/customer/dashboard", label:"Dashboard",icon:<DashboardIcon/>},
+      {path:"/customer/booking", label:"Bookings",icon:<BookmarksRoundedIcon/>},
+      {path:"/customer/logout", label:"Logout",icon:<PowerSettingsNewRoundedIcon/>}
     ],
     mobileOpen:false,
   }
@@ -89,6 +92,7 @@ class Sidebar extends Component {
     <div>
       <div className={this.props.classes.toolbar} style={{padding:10}}>
       <Avatar src={this.props.userData.imageUrl} className={this.props.classes.largeAvatar}/>
+      <br/>
       <Typography variant="h5" component="h2" align="center">
         {this.props.userData.userName}
       </Typography>
@@ -96,9 +100,9 @@ class Sidebar extends Component {
       <Divider />
       <List>
         {this.state.data.map((item, index) => (
-          <ListItem button key={index}>
+          <ListItem button key={index} onClick={() => this.handleClick(item.path)}>
             <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText onClick={() => this.handleClick(item.path)} primary={item.label}/>
+            <ListItemText primary={item.label}/>
           </ListItem>
         ))}
       </List>
@@ -124,7 +128,7 @@ class Sidebar extends Component {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Responsive drawer
+            ShopSafeJU
           </Typography>
         </Toolbar>
       </AppBar>
@@ -161,9 +165,11 @@ class Sidebar extends Component {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
-          <Route path="/profile" component={Shops}/>
-          <Route path="/dashboard" component={Shops}/>
-          <Route path="/bookings/:uid" component={BookNewSlot}/>
+          <Route path="/customer/profile" component={SignIn}/>
+          
+          <Route path="/customer/dashboard" component={Shops}/>
+          <Route path="/customer/booknewslot/:uid" component={BookNewSlot}/>
+          <Route path="/customer/booking/" component={MyBookings}/>
           <Route path="/" component={Shops}/>
       </Switch>
       </main>
@@ -172,4 +178,4 @@ class Sidebar extends Component {
   }
 }
 
-export default withRouter(withStyles(useStyles, { withTheme: true })(Sidebar));
+export default withRouter(withStyles(useStyles, { withTheme: true })(MainPage));

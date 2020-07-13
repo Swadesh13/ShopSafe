@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import Shop from './shop';
+import Shop from './components/shop';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from "@material-ui/core/styles";
-import { ShopsList } from '../utils/auth';
+import { ShopsList } from '../../../utils/auth';
 
 
 const useStyles = (theme) => ({
     root: {
       flexGrow: 1,
-    //   marginTop:5
     },
 });
-  
 
 
 class Shops extends Component {
@@ -28,10 +26,10 @@ class Shops extends Component {
                     container
                     spacing={4}
                     direction="row"
-                    justify="flex-start"
+                    justify="center"
                     alignItems="center"
                 >
-                    {this.state.shopData.map((data,i) => <Grid key={i} item  sm={6} md={4} lg={3}><Shop data={data}/></Grid> )}
+                    {this.state.shopData.map((data,i) => <Grid key={i} item  md={6} lg={4} ><Shop data={data}/></Grid> )}
                 </Grid>               
             </div>
         );
