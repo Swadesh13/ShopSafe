@@ -31,7 +31,7 @@ exports.validateSignUpShop = (data) => {
 
 	if (isEmpty(data.shopname)) errors.shopName = 'Must not be empty';
 	if (isEmpty(data.ownerName)) errors.ownerName = 'Must not be empty';
-	if (!(data.phoneNumber) || data.phoneNumber<1e9 || data.phoneNumber>=1e10) errors.phoneNumber = 'Must not be empty';
+	if (!(data.phoneNumber) || data.phoneNumber<1e9 || data.phoneNumber>=1e10) errors.phoneNumber = 'Must be a 10 digit number';
 	if (isEmpty(data.address)) errors.address = 'Must not be empty';
 
 	if (isEmpty(data.password)) errors.password = 'Must not be empty';
