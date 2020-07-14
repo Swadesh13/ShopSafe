@@ -21,6 +21,8 @@ exports.signUpShop = (request, response) => {
         tags: request.body.tags,
         // shopRating: request.body.shopRating,
         // shopPhoto: "url",
+        payment_modes: request.body.payment_modes,
+        discount: request.body.discount,
         bookingTimeUnit: request.body.bookingTimeUnit,
         maxConcurrent: request.body.maxConcurrent
     };
@@ -63,7 +65,9 @@ exports.signUpShop = (request, response) => {
                 closingHour: newUser.closingHour,
                 tags: newUser.tags,
                 shopRating: [0,0],
-                // shopPhoto: newUser.shopPhoto,
+                // shopPhoto: newUser.shopPhoto,            
+                payment_modes: newUser.payment_modes,
+                discount: newUser.discount,
                 bookingTimeUnit: newUser.bookingTimeUnit,
                 createdAt: new Date().toISOString(),    
                 maxConcurrent: newUser.maxConcurrent,
