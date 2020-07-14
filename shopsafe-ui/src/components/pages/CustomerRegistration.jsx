@@ -81,6 +81,7 @@ class CustomerRegistration extends Component {
       e.preventDefault();
       console.log("Registered",this.state);
       this.props.onSuccess("/customer");
+      this.props.auth("customerLogged");
     }
 
     handleHidden = () => {
