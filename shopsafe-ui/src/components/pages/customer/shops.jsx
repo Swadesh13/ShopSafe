@@ -8,6 +8,7 @@ import { ShopsList } from '../../../utils/auth';
 const useStyles = (theme) => ({
     root: {
       flexGrow: 1,
+      
     },
 });
 
