@@ -4,7 +4,7 @@ const config = require("../util/config");
 const firebase = require("firebase");
 const { validateLoginData } = require("../util/validators");
 
-exports.loginUser = (request, response) => {
+exports.loginuser = (request, response) => {
   const user = {
     email: request.body.email,
     password: request.body.password,
@@ -29,14 +29,16 @@ exports.loginUser = (request, response) => {
         })
         .catch((err) => {
           console.error(err);
-          return response.status(400).json({ message: "server error" });
+          return response
+            .status(400)
+            .json({ message: "Error in fetching user details" });
         });
     })
     .catch((error) => {
       console.error(error);
       return response
         .status(403)
-        .json({ general: "wrong credentials, please try again" });
+        .json({ general: "Wrong credentials. Please try again" });
     });
 };
 

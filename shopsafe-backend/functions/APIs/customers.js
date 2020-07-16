@@ -2,10 +2,7 @@ const { db, admin } = require("../util/admin");
 const config = require("../util/config");
 
 const firebase = require("firebase");
-const {
-  validateLoginData,
-  validateSignUpCustomer,
-} = require("../util/validators");
+const { validateSignUpCustomer } = require("../util/validators");
 
 firebase.initializeApp(config);
 
@@ -307,20 +304,5 @@ exports.getShops = (request, response) => {
     .catch((err) => {
       console.error(err);
       return response.status(400).json({ error: err.code });
-    });
-};
-
-exports.logoutuser = (request, response) => {
-  firebase
-    .auth()
-    .signOut()
-    .then(function () {
-      return response.status(200).json({ message: "Logout successful" });
-      // Sign-out successful.
-    })
-    .catch(function (error) {
-      console.error(error);
-      return response.status(400).json({ error: error.code });
-      // An error happened.
     });
 };

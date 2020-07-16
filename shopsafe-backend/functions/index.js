@@ -5,7 +5,7 @@ const auth = require("./util/auth");
 var cors = require("cors");
 app.use(cors());
 
-const { loginUser, logoutuser } = require("./APIs/user");
+const { loginuser, logoutuser } = require("./APIs/user");
 
 const {
   signUpShop,
@@ -43,13 +43,13 @@ app.put("/user", auth, updateUserDetails);
 app.post("/image", auth, uploadProfilePhoto);
 
 // bookings routes
-app.get("/bookings", auth, getAllBookings);
+app.post("/bookings", auth, getAllBookings);
 app.post("/booking", auth, createBooking);
 app.put("/booking/:bookingId", auth, editBooking);
 app.delete("/booking/:bookingId", auth, deleteBooking);
 
 // common user routes
-app.post("/login", loginUser);
-app.get("/logout", logoutuser);
+app.post("/login", loginuser);
+app.get("/logout", auth, logoutuser);
 
 exports.api = functions.https.onRequest(app);
