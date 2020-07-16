@@ -62,12 +62,30 @@ const useStyles = (theme) => ({
 class Shop extends Component {
   state = {
     imWidth: "90%",
+    
   };
 
   handleClick = () => {
     this.props.history.push(`/customer/booknewslot/${this.props.data.uid}`);
     console.log("Loved");
   };
+
+  openedNow = () => {
+    let d = new Date();
+    let currentOffset = d.getTimezoneOffset();
+    let ISTOffset = 330;
+    let ISTTime = new Date(d.getTime() + (ISTOffset + currentOffset) * 60000);
+    const openingTime = new Date();
+    const closingTime = new Date();
+    const { openingHour, openingMinute, closingHour, closingMinute } = this.props.data;
+    openingTime.setHours(openingHour); openingTime.setMinutes(openingMinute);
+    closingTime.setHours(closingHour); closingTime.setMinutes(closingTime);
+
+    return (
+      d.getTime() > openingTime.getTime() &&
+      d.getTime() < closingTime.getTime()
+    );
+  }
 
   time = (t) => {
     let d = new Date();
@@ -82,14 +100,18 @@ class Shop extends Component {
     console.log(this.state.imWidth, window.screen.width);
     const { classes, theme } = this.props;
     const {
-      name,
+      shopName: name,
       address,
-      imgUrl,
-      itemsAvailable,
-      ratings,
-      shopSchedule,
+      imageUrl,
+      discount,
+      openingTimeIST,
+      closingTimeIST,
+      tags: itemsAvailable,
+      shopRating: ratings,
+      //payment_modes,
     } = this.props.data;
-    const { openingTime, closingTime } = shopSchedule;
+    const imgUrl = imageUrl || "https://picsum.photos/" + Math.round(Math.random(0, 1) * 1000);
+    //const { openingTime, closingTime } = shopSchedule;
     return (
       <Box
         className={classes.root}
@@ -117,7 +139,7 @@ class Shop extends Component {
                 }}
               >
                 <Chip
-                  label="Open"
+                  label={(this.openedNow())?"Open":"Closed"}
                   style={{
                     background: "#ffd79f",
                     fontSize: 17,
@@ -135,9 +157,9 @@ class Shop extends Component {
                 <FiberManualRecordIcon
                   style={{ color: "green", fontSize: 13, marginRight: 5 }}
                 />
-                {"8:00 AM  "}
+                {openingTimeIST}
                 <FiberManualRecordIcon style={{ color: "red", fontSize: 13 }} />
-                8:30 PM
+                {closingTimeIST}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={8}>
@@ -152,7 +174,7 @@ class Shop extends Component {
                 <Box style={{ display: "flex", flexDirection: "row" }}>
                   <Rating
                     name="half-rating-read"
-                    defaultValue={ratings}
+                    defaultValue={ratings[0]}
                     precision={0.5}
                     readOnly
                     size="small"
@@ -163,7 +185,7 @@ class Shop extends Component {
                     color="textSecondary"
                     style={{ paddingTop: 3 }}
                   >
-                    {ratings} ({Math.round(Math.random(0, 1) * 1000)} reviews)
+                    {ratings[0]} ({ratings[1]} reviews)
                   </Typography>
                 </Box>
                 <Typography variant="subtitle1" color="textSecondary">
@@ -172,14 +194,20 @@ class Shop extends Component {
                 <Typography variant="body1" gutterBottom>
                   <Box style={{ display: "flex", flexDirection: "row" }}>
                     <LocationOnIcon />
-                    <Typography variant="body1" style={{ paddingBottom: 3,marginLeft: 5, }}>
+                    <Typography
+                      variant="body1"
+                      style={{ paddingBottom: 3, marginLeft: 5 }}
+                    >
                       {"3 km"}
                     </Typography>
                   </Box>
                   {true && (
                     <Box style={{ display: "flex", flexDirection: "row" }}>
-                      <PaymentIcon style={{ color: "#00b300" }}/>
-                      <Typography variant="body1" style={{ paddingBottom: 3,marginLeft: 5, }}>
+                      <PaymentIcon style={{ color: "#00b300" }} />
+                      <Typography
+                        variant="body1"
+                        style={{ paddingBottom: 3, marginLeft: 5 }}
+                      >
                         Accepts Cash and Online Payments
                       </Typography>
                     </Box>
@@ -195,7 +223,7 @@ class Shop extends Component {
                       marginLeft: 5,
                     }}
                   >
-                    10% off on all On-Time orders
+                    {discount}% off on all On-Time orders
                   </Typography>
                 </Box>
               </Box>
@@ -253,6 +281,7 @@ class Shop extends Component {
               </Button>
               <Button
                 variant="outlined"
+                onClick={this.handleClick}
                 style={{ color: "green", margin: 2 }}
                 endIcon={<ArrowForwardIosIcon style={{ paddingBottom: 1 }} />}
               >

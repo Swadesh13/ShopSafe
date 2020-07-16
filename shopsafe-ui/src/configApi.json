@@ -1,0 +1,9 @@
+{
+  "login": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/login",
+  "customerSignup": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/signup",
+  "shopSignup": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/signupshop",
+  "myBookings": "",
+  "shopBookings": "",
+  "shopList": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shops"
+  
+}

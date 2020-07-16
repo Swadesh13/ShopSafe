@@ -22,6 +22,10 @@ class CustomAppBar extends Component {
   handleSignIn = () => {
     this.props.history.push("/signin");
   }
+  
+  handleSignUp = () => {
+    this.props.history.push("/signup");
+  }
 
   render() {
     const { menuOption, auth } = this.props;
@@ -37,13 +41,24 @@ class CustomAppBar extends Component {
               handlePath={this.handlePath}
             />
           ) : (
-            <Button
-              variant="outlined"
-              onClick={this.handleSignIn}
-              color="primary"
-            >
-              Sign In
-            </Button>
+            <React.Fragment>
+              <Button
+                variant="outlined"
+                onClick={this.handleSignIn}
+                color="primary"
+                style={{ margin: 3 }}
+              >
+                Sign In
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={this.handleSignUp}
+                color="primary"
+                style={{ margin: 3 }}
+              >
+                Sign Up
+              </Button>
+            </React.Fragment>
           )}
         </Toolbar>
       </AppBar>
@@ -102,7 +117,7 @@ class ProfileMenu extends Component {
           onClose={handleClose}
         >
           {menuOption.map((option, i) => (
-            <MenuItem onClick={() => this.handlePath(option.path)}>
+            <MenuItem key={i} onClick={() => this.handlePath(option.path)}>
               {option.label}
             </MenuItem>
           ))}

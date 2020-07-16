@@ -26,6 +26,7 @@ import BookNewSlot from "./bookSlot/BookSlot";
 import SignIn from "../../pages/signin";
 import MyBookings from "./myBookings";
 import MyProfile from "./profile";
+import Logout from "./Logout";
 
 const drawerWidth = 240;
 
@@ -176,6 +177,7 @@ class MainPage extends Component {
             <Route path="/customer/dashboard" component={Shops} />
             <Route path="/customer/booknewslot/:uid" component={BookNewSlot} />
             <Route path="/customer/booking/" component={MyBookings} />
+            <Route path="/customer/logout/" component={Logout} />
             <Route path="/" component={Shops} />
           </Switch>
         </main>

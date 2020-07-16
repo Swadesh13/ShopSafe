@@ -9,12 +9,19 @@ import { orange, deepOrange } from "@material-ui/core/colors";
 import MainPage from "./components/pages/customer/mainPage";
 import CustomAppBar from "./components/AppComponent";
 import Home from './components/home';
+import Logout from './components/pages/shopowner/shopLogout';
+import { withRouter } from "react-router-dom";
+import ShopDashboard from "./components/pages/shopowner/dashBoard";
+
+
 
 class App extends Component {
   state = {
     auth: {
-      customerLogged: false,
-      shopOwnerLogged: false,
+      customerLogged:false,
+        //localStorage.getItem("userLogged") && !localStorage.getItem("isShop"),
+      shopOwnerLogged:false,
+        //localStorage.getItem("userLogged") && localStorage.getItem("isShop"),
     },
     data: {
       imageUrl: "https://picsum.photos/554",
@@ -47,18 +54,40 @@ class App extends Component {
     shopOwnerMenu: [
       {
         path: "/shopowner/shopprofile",
-        label:"Shop Profile",
+        label: "Shop Profile",
       },
       {
         path: "/shopowner/dashboard",
         label: "Dashboard",
-      }
-    ]
+      },
+      {
+        path: "/logout",
+        label: "Logout",
+      },
+    ],
   };
 
-  handleAuth = authname => {
-    this.setState({auth:{[authname]:true},userLoggedIn:true})
+  componentDidMount() {
+    try {
+      if (localStorage.getItem("userLogged")) {
+        const check = localStorage.getItem("isShop");
+        console.log("cdm", check);
+        if (check) {
+          console.log("cdm shopOwnerLogged", check);
+          this.setState({ auth: { shopOwnerLogged: true } });
+          this.props.history.push("/shopowner");
+        } else {
+          console.log("cdm customerLogged", check);
+          this.setState({ auth: { customerLogged: true } });
+          this.props.history.push("/customer");
+        }
+      }
+    } catch (ex) {}
   }
+
+  handleAuth = (authname) => {
+    this.setState({ auth: { [authname]: true } });
+  };
 
   darkTheme = createMuiTheme({
     palette: {
@@ -73,7 +102,6 @@ class App extends Component {
   });
 
   render() {
-    
     const {
       customerMenu,
       shopOwnerMenu,
@@ -102,7 +130,7 @@ class App extends Component {
     const menuOption =
       (shopOwnerLogged || customerLogged) &&
       (customerLogged ? customerMenu : shopOwnerMenu);
-    console.log("App render",this.state,menuOption);
+    console.log("App render", this.state, menuOption);
     return (
       <div style={{ flexGrow: 1, background: "#fff8f2" }}>
         <CustomAppBar
@@ -111,7 +139,11 @@ class App extends Component {
         />
         <Grid container direction="row" justify="center" alignItems="baseline">
           <Switch>
-            <Route path="/signin" component={SignIn} />
+            <Route
+              path="/signin"
+              component={() => <SignIn handleAuth={this.handleAuth} />}
+            />
+            <Route path="/logout" component={() => <Logout />} />
             <Route
               path="/signup"
               component={() => <SignUp handleAuth={this.handleAuth} />}
@@ -120,7 +152,7 @@ class App extends Component {
               <Route
                 path="/shopowner"
                 component={() => (
-                  <h1>Owner Dashboard is still under development</h1>
+                  <ShopDashboard/>
                 )}
               />
             )}
@@ -138,4 +170,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
