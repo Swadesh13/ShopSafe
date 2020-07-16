@@ -16,6 +16,33 @@ exports.loginuser = (request, response) => {
     .auth()
     .signInWithEmailAndPassword(user.email, user.password)
     .then((data) => {
+      var loggedinUser = firebase.auth().currentUser;
+      if (loggedinUser.emailVerified == false) {
+        firebase
+          .auth()
+          .signOut()
+          .then(function () {
+            loggedinUser
+              .sendEmailVerification()
+              .then(function () {
+                // Email sent.
+                return response.status(400).json({
+                  message:
+                    "Email not verified yet. Verification Mail resent to your registered email address. Verify and re-login",
+                });
+              })
+              .catch(function (error) {
+                // An error happened.
+              });
+
+            // Sign-out successful.
+          })
+          .catch(function (error) {
+            console.error(error);
+            return response.status(400).json({ error: error.code });
+            // An error happened.
+          });
+      }
       return data.user.getIdToken();
     })
     .then((token) => {
