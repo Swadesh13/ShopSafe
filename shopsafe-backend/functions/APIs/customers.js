@@ -163,33 +163,6 @@ exports.signUpUser = (request, response) => {
     });
 };
 
-//Login
-exports.loginUser = (request, response) => {
-  const user = {
-    email: request.body.email,
-    password: request.body.password,
-  };
-
-  const { valid, errors } = validateLoginData(user);
-  if (!valid) return response.status(400).json(errors);
-
-  firebase
-    .auth()
-    .signInWithEmailAndPassword(user.email, user.password)
-    .then((data) => {
-      return data.user.getIdToken();
-    })
-    .then((token) => {
-      return response.json({ token });
-    })
-    .catch((error) => {
-      console.error(error);
-      return response
-        .status(403)
-        .json({ general: "wrong credentials, please try again" });
-    });
-};
-
 exports.getUserDetail = (request, response) => {
   let userData = {};
   db.doc(`/customers/${request.user.email}`)
@@ -297,17 +270,17 @@ exports.getShops = (request, response) => {
     .get()
     .then((data) => {
       data.forEach((doc) => {
-        suffix = doc.data().openingHour > 12 ? "PM" : "AM";
+        suffix = doc.data().openingHour >= 12 ? "PM" : "AM";
         openingTime =
-          (doc.data().openingHour > 12
+          (doc.data().openingHour >= 12
             ? doc.data().openingHour - 12
             : doc.data().openingHour) +
           (doc.data().openingMinute > 0 ? ":" + doc.data().openingMinute : "") +
           " " +
           suffix;
-        suffix = doc.data().closingHour > 12 ? "PM" : "AM";
+        suffix = doc.data().closingHour >= 12 ? "PM" : "AM";
         closingTime =
-          (doc.data().closingHour > 12
+          (doc.data().closingHour >= 12
             ? doc.data().closingHour - 12
             : doc.data().closingHour) +
           (doc.data().closingMinute > 0 ? ":" + doc.data().closingMinute : "") +
@@ -334,5 +307,20 @@ exports.getShops = (request, response) => {
     .catch((err) => {
       console.error(err);
       return response.status(400).json({ error: err.code });
+    });
+};
+
+exports.logoutuser = (request, response) => {
+  firebase
+    .auth()
+    .signOut()
+    .then(function () {
+      return response.status(200).json({ message: "Logout successful" });
+      // Sign-out successful.
+    })
+    .catch(function (error) {
+      console.error(error);
+      return response.status(400).json({ error: error.code });
+      // An error happened.
     });
 };

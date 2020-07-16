@@ -102,9 +102,9 @@ exports.validateBooking = (data) => {
   let errors = {};
   if (isEmpty(data.shopId)) errors.shopId = "Shop ID should not be empty";
   if (isEmpty(data.slotName)) errors.slotName = "Slot Name should not be empty";
-  if (isEmpty(data.slotGroupBegins))
+  if (data.slotGroupBegins == "")
     errors.slotGroupBegins = "Slot beginning time should not be empty";
-  if (isEmpty(data.slotGroupEnds))
+  if (data.slotGroupEnds == "")
     errors.slotGroupEnds = "Slot ending time should not be empty";
   if (isEmpty(data.purchaseItems))
     errors.purchaseItems = "Purchase Items should not be empty";

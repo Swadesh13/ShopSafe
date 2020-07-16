@@ -16,24 +16,12 @@ module.exports = (request, response, next) => {
     .verifyIdToken(idToken)
     .then((decodedToken) => {
       request.user = decodedToken;
-      const data = db
-        .collection(response.locals.collectionName)
-        .where("userId", "==", request.user.uid)
-        .limit(1)
-        .get();
-      return data;
-    })
-    .then((data) => {
-      console.log(data.docs[0]);
-      // if (!request.user.email_verified)
-      //   return response.status(400).json({
-      //     message: "User email verification pending. Complete to proceed",
-      //   });
-      request.user.isShop = false;
-      if (Object.values(data.docs[0].data()).indexOf("ownerName") >= 0)
-        request.user.isShop = true;
-      request.user.email = data.docs[0].data().email;
-      request.user.imageUrl = data.docs[0].data().imageUrl;
+      request.user.isShop = request.body.isShop;
+      if (request.url == "/booking" && request.body.isShop == true) {
+        return response.status(400).json({
+          message: "Shops are not allowed to create / edit / delete booking",
+        });
+      }
       return next();
     })
     .catch((err) => {

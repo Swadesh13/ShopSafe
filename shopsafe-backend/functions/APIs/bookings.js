@@ -17,9 +17,9 @@ exports.getAllBookings = (request, response) => {
         var arrivalTime, deliveryTime, suffix;
         let bookings = [];
         data.forEach((doc) => {
-          suffix = doc.data().arrivalHour > 12 ? "PM" : "AM";
+          suffix = doc.data().arrivalHour >= 12 ? "PM" : "AM";
           arrivalTime =
-            (doc.data().arrivalHour > 12
+            (doc.data().arrivalHour >= 12
               ? doc.data().arrivalHour - 12
               : doc.data().arrivalHour) +
             (doc.data().arrivalMinute > 0
@@ -27,9 +27,9 @@ exports.getAllBookings = (request, response) => {
               : "") +
             " " +
             suffix;
-          suffix = doc.data().deliveryHour > 12 ? "PM" : "AM";
+          suffix = doc.data().deliveryHour >= 12 ? "PM" : "AM";
           deliveryTime =
-            (doc.data().deliveryHour > 12
+            (doc.data().deliveryHour >= 12
               ? doc.data().deliveryHour - 12
               : doc.data().deliveryHour) +
             (doc.data().deliveryMinute > 0
@@ -70,9 +70,9 @@ exports.getAllBookings = (request, response) => {
         var arrivalTime, deliveryTime, suffix;
         let bookings = [];
         data.forEach((doc) => {
-          suffix = doc.data().arrivalHour > 12 ? "PM" : "AM";
+          suffix = doc.data().arrivalHour >= 12 ? "PM" : "AM";
           arrivalTime =
-            (doc.data().arrivalHour > 12
+            (doc.data().arrivalHour >= 12
               ? doc.data().arrivalHour - 12
               : doc.data().arrivalHour) +
             (doc.data().arrivalMinute > 0
@@ -80,9 +80,9 @@ exports.getAllBookings = (request, response) => {
               : "") +
             " " +
             suffix;
-          suffix = doc.data().deliveryHour > 12 ? "PM" : "AM";
+          suffix = doc.data().deliveryHour >= 12 ? "PM" : "AM";
           deliveryTime =
-            (doc.data().deliveryHour > 12
+            (doc.data().deliveryHour >= 12
               ? doc.data().deliveryHour - 12
               : doc.data().deliveryHour) +
             (doc.data().deliveryMinute > 0
@@ -121,9 +121,8 @@ exports.getAllBookings = (request, response) => {
 
 exports.createBooking = (request, response) => {
   var shopDetails = [];
-
   db.collection("shops")
-    .where("shopId", "==", request.body.shopId)
+    .where("userId", "==", request.body.shopId)
     .limit(1)
     .get()
     .then((data) => {
@@ -235,7 +234,7 @@ exports.createBooking = (request, response) => {
 
         if (ArrivalMinute + duration > 70)
           return response.status(400).json({
-            message: `You will be allotted more than allowed time into next slot`,
+            message: `You will be allotted more than allowed time into next slot. Please change your slot or reduce items`,
           });
 
         var expectedMinute = (ArrivalMinute + duration) % 60;
@@ -285,7 +284,7 @@ exports.createBooking = (request, response) => {
             slotName: request.body.slotName,
             slotGroupBegins: request.body.slotGroupBegins,
             slotGroupEnds: request.body.slotGroupEnds,
-            customerId: request.body.customerId,
+            customerId: request.user.uid,
             purchaseItems: items,
             arrivalHour: request.body.slotGroupBegins,
             arrivalMinute: ArrivalMinute,
@@ -301,9 +300,9 @@ exports.createBooking = (request, response) => {
             .add(newBooking)
             .then((doc) => {
               var arrivalTime, deliveryTime, suffix;
-              suffix = newBooking.arrivalHour > 12 ? "PM" : "AM";
+              suffix = newBooking.arrivalHour >= 12 ? "PM" : "AM";
               arrivalTime =
-                newBooking.arrivalHour > 12
+                newBooking.arrivalHour >= 12
                   ? newBooking.arrivalHour - 12
                   : newBooking.arrivalHour +
                     (newBooking.arrivalMinute > 0
@@ -311,9 +310,9 @@ exports.createBooking = (request, response) => {
                       : "") +
                     " " +
                     suffix;
-              suffix = newBooking.deliveryHour > 12 ? "PM" : "AM";
+              suffix = newBooking.deliveryHour >= 12 ? "PM" : "AM";
               deliveryTime =
-                newBooking.deliveryHour > 12
+                newBooking.deliveryHour >= 12
                   ? newBooking.deliveryHour - 12
                   : newBooking.deliveryHour +
                     (newBooking.deliveryMinute > 0
@@ -522,9 +521,9 @@ exports.editBooking = (request, response) => {
                   });
                 });
               var arrivalTime, deliveryTime, suffix;
-              suffix = newBooking.arrivalHour > 12 ? "PM" : "AM";
+              suffix = newBooking.arrivalHour >= 12 ? "PM" : "AM";
               arrivalTime =
-                newBooking.arrivalHour > 12
+                newBooking.arrivalHour >= 12
                   ? newBooking.arrivalHour - 12
                   : newBooking.arrivalHour +
                     (newBooking.arrivalMinute > 0
@@ -532,9 +531,9 @@ exports.editBooking = (request, response) => {
                       : "") +
                     " " +
                     suffix;
-              suffix = newBooking.deliveryHour > 12 ? "PM" : "AM";
+              suffix = newBooking.deliveryHour >= 12 ? "PM" : "AM";
               deliveryTime =
-                newBooking.deliveryHour > 12
+                newBooking.deliveryHour >= 12
                   ? newBooking.deliveryHour - 12
                   : newBooking.deliveryHour +
                     (newBooking.deliveryMinute > 0
