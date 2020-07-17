@@ -10,6 +10,10 @@ import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { withRouter } from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import Slide from "@material-ui/core/Slide";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+
+
 
 
 class CustomAppBar extends Component {
@@ -27,41 +31,55 @@ class CustomAppBar extends Component {
     this.props.history.push("/signup");
   }
 
+  HideOnScroll = (props) => {
+  const { children, window } = props;
+  const trigger = useScrollTrigger({ target: window ? window() : undefined });
+
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children}
+    </Slide>
+  );
+}
+
   render() {
     const { menuOption, auth } = this.props;
+    const { HideOnScroll } = this;
     return (
-      <AppBar position="static" style={{ flexGrow: 1, background: "#f98b88" }}>
-        <Toolbar>
-          <Typography variant="h4" noWrap style={{ flexGrow: 1 }}>
-            <b>ShopSafeJU</b>
-          </Typography>
-          {auth ? (
-            <ProfileMenu
-              menuOption={menuOption || []}
-              handlePath={this.handlePath}
-            />
-          ) : (
-            <React.Fragment>
-              <Button
-                variant="outlined"
-                onClick={this.handleSignIn}
-                color="primary"
-                style={{ margin: 3 }}
-              >
-                Sign In
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={this.handleSignUp}
-                color="primary"
-                style={{ margin: 3 }}
-              >
-                Sign Up
-              </Button>
-            </React.Fragment>
-          )}
-        </Toolbar>
-      </AppBar>
+      <HideOnScroll {...this.props}>
+        <AppBar  style={{ flexGrow: 1, background: "#f98b88" }}>
+          <Toolbar>
+            <Typography variant="h4" noWrap style={{ flexGrow: 1 }}>
+              <b>ShopSafeJU</b>
+            </Typography>
+            {auth ? (
+              <ProfileMenu
+                menuOption={menuOption || []}
+                handlePath={this.handlePath}
+              />
+            ) : (
+              <React.Fragment>
+                <Button
+                  variant="outlined"
+                  onClick={this.handleSignIn}
+                  color="primary"
+                  style={{ margin: 3 }}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={this.handleSignUp}
+                  color="primary"
+                  style={{ margin: 3 }}
+                >
+                  Sign Up
+                </Button>
+              </React.Fragment>
+            )}
+          </Toolbar>
+        </AppBar>
+      </HideOnScroll>
     );
   }
 }

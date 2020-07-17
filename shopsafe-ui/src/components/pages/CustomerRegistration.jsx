@@ -92,20 +92,21 @@ class CustomerRegistration extends Component {
     e.preventDefault();
     console.log("Registered", this.state);
 
-    this.props.auth("customerLogged");
-    this.props.onSuccess("/customer");
+    // this.props.auth("customerLogged");
+    // this.props.onSuccess("/customer");
 
-    // try {
-    //   await customerRegister(this.state.data);
-    //   this.props.auth("customerLogged");
-    //   this.props.onSuccess("/customer");
-    // } catch (ex) {
-    //   if (ex.response) {
-    //     const error = { ...ex.response.data };
-    //     console.log("error", ex.response);
-    //     this.setState({ error });
-    //   }
-    // }
+    try {
+      const response = await customerRegister(this.state.data);
+      console.log(response);
+      alert("SignedUp Successfully. Check your email to verify and Signin .");
+      window.location = "/";
+    } catch (ex) {
+      if (ex.response) {
+        const error = { ...ex.response.data };
+        console.log("error", ex.response);
+        this.setState({ error });
+      }
+    }
   };
 
 

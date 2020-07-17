@@ -50,7 +50,7 @@ class SignUp extends Component {
     const { classes } = this.props;
     const { value } = this.state;
     return (
-      <Container component="main" maxWidth="md">
+      <Container component="main" maxWidth="md" >
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
