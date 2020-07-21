@@ -137,7 +137,13 @@ class App extends Component {
           menuOption={menuOption}
           auth={shopOwnerLogged || customerLogged}
         />
-        <Grid container direction="row" justify="center" alignItems="baseline">
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="baseline"
+          style={{ marginTop: 60 }}
+        >
           <Switch>
             <Route
               path="/signin"
@@ -149,12 +155,7 @@ class App extends Component {
               component={() => <SignUp handleAuth={this.handleAuth} />}
             />
             {shopOwnerLogged && (
-              <Route
-                path="/shopowner"
-                component={() => (
-                  <ShopDashboard/>
-                )}
-              />
+              <Route path="/shopowner" component={() => <ShopDashboard />} />
             )}
             {customerLogged && (
               <Route

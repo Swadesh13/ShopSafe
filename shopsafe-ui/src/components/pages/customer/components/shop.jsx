@@ -81,9 +81,12 @@ class Shop extends Component {
     openingTime.setHours(openingHour); openingTime.setMinutes(openingMinute);
     closingTime.setHours(closingHour); closingTime.setMinutes(closingTime);
 
+    // return (
+    //   ISTTime.getTime() > openingTime.getTime() &&
+    //   ISTTime.getTime() < closingTime.getTime()
+    // );
     return (
-      d.getTime() > openingTime.getTime() &&
-      d.getTime() < closingTime.getTime()
+      ISTTime.getHours() >= openingHour && ISTTime.getHours() <= closingHour
     );
   }
 
