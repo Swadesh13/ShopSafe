@@ -94,7 +94,7 @@ exports.signUpUser = (request, response) => {
     confirmPassword: request.body.confirmPassword,
     phoneNumber: request.body.phoneNumber,
     address: request.body.address,
-    // profilePhoto: "url",
+    // imageUrl: "url",
     gender: request.body.gender,
   };
 
@@ -149,7 +149,18 @@ exports.signUpUser = (request, response) => {
       return db.doc(`/customers/${newUser.email}`).set(userCredentials);
     })
     .then(() => {
-      return response.status(201).json({ token });
+      firebase
+        .auth()
+        .signOut()
+        .then(function () {
+          return response.status(200).json({ message: "Sign Up Successful" });
+          // Sign-out successful.
+        })
+        .catch(function (error) {
+          console.error(error);
+          return response.status(400).json({ error: error.code });
+          // An error happened.
+        });
     })
     .catch((err) => {
       console.error(err);
@@ -260,9 +271,115 @@ exports.uploadProfilePhoto = (request, response) => {
   busboy.end(request.rawBody);
 };
 
+// exports.getShops = (request, response) => {
+//   console.log("logging here@@@", request.body.userLocation);
+//   var openingTime, closingTime, suffix;
+//   var originvalue = request.body.userLocation,
+//     destination;
+//   var metrics = [];
+//   var shops = [];
+//   var i = 0,
+//     count = 0;
+
+//   db.collection("shops")
+//     .get()
+//     .then((data) => {
+//       i = 0;
+//       count = 0;
+//       data.forEach((doc) => {
+//         i += 1;
+//       });
+//       data.forEach((doc) => {
+//         var distance = require("google-distance");
+//         // distance.apiKey = "AIzaSyBixtvcF5A38Z2dVP9fFkcvLf5P59RmnEA";
+//         distance.apiKey = "AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk";
+//         destination = doc.data().address;
+//         originvalue = request.body.userLocation;
+//         distance.get(
+//           {
+//             origin: originvalue,
+//             destination: destination,
+//           },
+//           function (err, data) {
+//             if (err) return console.log(err);
+//             metrics.travelRadius = data.distanceValue;
+//             metrics.travelTime = data.durationValue;
+
+//             count += 1;
+//             if (
+//               metrics.travelRadius <=
+//               (typeof request.body.radius == "undefined"
+//                 ? 2000
+//                 : request.body.radius)
+//             ) {
+//               suffix = doc.data().openingHour >= 12 ? "PM" : "AM";
+//               openingTime =
+//                 (doc.data().openingHour >= 12
+//                   ? doc.data().openingHour - 12
+//                   : doc.data().openingHour) +
+//                 (doc.data().openingMinute > 0
+//                   ? ":" + doc.data().openingMinute
+//                   : "") +
+//                 " " +
+//                 suffix;
+//               suffix = doc.data().closingHour >= 12 ? "PM" : "AM";
+//               closingTime =
+//                 (doc.data().closingHour >= 12
+//                   ? doc.data().closingHour - 12
+//                   : doc.data().closingHour) +
+//                 (doc.data().closingMinute > 0
+//                   ? ":" + doc.data().closingMinute
+//                   : "") +
+//                 " " +
+//                 suffix;
+//               shops.push({
+//                 shopName: doc.data().shopName,
+//                 imageUrl: doc.data().imageUrl,
+//                 address: doc.data().address,
+//                 openingHour: doc.data().openingHour,
+//                 closingHour: doc.data().closingHour,
+//                 openingMinute: doc.data().openingMinute,
+//                 closingMinute: doc.data().closingMinute,
+//                 openingTimeIST: openingTime,
+//                 closingTimeIST: closingTime,
+//                 discount: doc.data().discount,
+//                 shopRating: doc.data().shopRating,
+//                 payment_modes: doc.data().payment_modes,
+//                 tags: doc.data().tags,
+//                 shopId: doc.data().userId,
+//                 ownerName: doc.data().ownerName,
+//                 distancemetric: (metrics.travelRadius / 1000).toFixed(2),
+//                 travelDuration: metrics.travelTime,
+//               });
+//             }
+
+//             // if all shops are iterated over, then return the final shop list
+//             if (count == i && shops.length > 0)
+//               return response.status(200).json(shops);
+//             // else
+//             //   return response
+//             //     .status(400)
+//             //     .json({ message: "No shops were found" });
+//           }
+//         );
+//       });
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       return response.status(400).json({ error: err.code });
+//     });
+// };
+
 exports.getShops = (request, response) => {
-  var shops = [];
+  // console.log("logging here@@@", request.body.userLocation);
   var openingTime, closingTime, suffix;
+  // var originvalue = request.body.userLocation,
+  //   destination;
+  // var metrics = [];
+  var shops = [];
+  // var i = 0,
+  //   count = 0;
+
   db.collection("shops")
     .get()
     .then((data) => {
@@ -297,6 +414,64 @@ exports.getShops = (request, response) => {
           shopRating: doc.data().shopRating,
           payment_modes: doc.data().payment_modes,
           tags: doc.data().tags,
+          shopId: doc.data().userId,
+          ownerName: doc.data().ownerName,
+          distancemetric: 1.54,
+          travelDuration: 313,
+        });
+      });
+    })
+    .then(() => {
+      return response.status(200).json(shops);
+    })
+    .catch((err) => {
+      console.error(err);
+      return response.status(400).json({ error: err.code });
+    });
+};
+
+exports.shopDetails = (request, response) => {
+  var shops = [];
+  var openingTime, closingTime, suffix;
+  db.collection("shops")
+    .where("userId", "==", request.params.shopId)
+    .get()
+    .then((data) => {
+      data.forEach((doc) => {
+        suffix = doc.data().openingHour >= 12 ? "PM" : "AM";
+        openingTime =
+          (doc.data().openingHour >= 12
+            ? doc.data().openingHour - 12
+            : doc.data().openingHour) +
+          (doc.data().openingMinute > 0 ? ":" + doc.data().openingMinute : "") +
+          " " +
+          suffix;
+        suffix = doc.data().closingHour >= 12 ? "PM" : "AM";
+        closingTime =
+          (doc.data().closingHour >= 12
+            ? doc.data().closingHour - 12
+            : doc.data().closingHour) +
+          (doc.data().closingMinute > 0 ? ":" + doc.data().closingMinute : "") +
+          " " +
+          suffix;
+
+        shops.push({
+          shopName: doc.data().shopName,
+          imageUrl: doc.data().imageUrl,
+          address: doc.data().address,
+          openingHour: doc.data().openingHour,
+          closingHour: doc.data().closingHour,
+          openingMinute: doc.data().openingMinute,
+          closingMinute: doc.data().closingMinute,
+          openingTimeIST: openingTime,
+          closingTimeIST: closingTime,
+          discount: doc.data().discount,
+          shopRating: doc.data().shopRating,
+          payment_modes: doc.data().payment_modes,
+          tags: doc.data().tags,
+          shopId: doc.data().userId,
+          ownerName: doc.data().ownerName,
+          phoneNumber: doc.data().phoneNumber,
         });
       });
       return response.json(shops);
@@ -305,4 +480,40 @@ exports.getShops = (request, response) => {
       console.error(err);
       return response.status(400).json({ error: err.code });
     });
+};
+
+exports.checkapi = (request, response) => {
+  var distance = require("google-distance");
+  distance.apiKey = "AIzaSyBixtvcF5A38Z2dVP9fFkcvLf5P59RmnEA";
+
+  var origin =
+    "South+City+Mall,+Prince+Anwar+Shah+Road,+South+City+Complex,+Jadavpur,+Calcutta,+West+Bengal,+India";
+  var destination =
+    "Jadavpur+University,+3,+Jadavpur,+Calcutta,+West+Bengal,+India";
+  var url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${origin}&destinations=${destination}&key=AIzaSyBixtvcF5A38Z2dVP9fFkcvLf5P59RmnEA`;
+
+  distance.get(
+    {
+      origin: origin,
+      destination: destination,
+    },
+    function (err, data) {
+      if (err) return console.log(err);
+      console.log(data);
+    }
+  );
+
+  // requests(url, function (error, response, body) {
+  //   var metrics = [];
+  //   // console.error("error:", error); // Print the error if one occurred
+  //   // console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
+  //   metrics.push({
+  //     travelRadius: JSON.parse(body).rows[0].elements[0].distance.value,
+  //     travelTime: JSON.parse(body).rows[0].elements[0].duration.value,
+  //     travelTimeText: JSON.parse(body).rows[0].elements[0].duration.text,
+  //     travelRadiusText: JSON.parse(body).rows[0].elements[0].distance.text,
+  //   });
+
+  //   console.log(metrics);
+  // });
 };

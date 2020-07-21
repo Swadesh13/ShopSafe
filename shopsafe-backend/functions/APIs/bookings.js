@@ -118,9 +118,9 @@ exports.getAllBookings = (request, response) => {
   //   }
   // });
 };
-
 exports.createBooking = (request, response) => {
   var shopDetails = [];
+  console.log(request.body);
   db.collection("shops")
     .where("userId", "==", request.body.shopId)
     .limit(1)
@@ -626,7 +626,6 @@ exports.deleteBooking = (request, response) => {
             error: err.code,
           });
         });
-
       return document.delete();
     })
     .then(() => {

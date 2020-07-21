@@ -7,6 +7,8 @@ app.use(cors());
 
 const { loginuser, logoutuser } = require("./APIs/user");
 
+const { rateShop, getReviews, editReview } = require("./APIs/ratings");
+
 const {
   signUpShop,
   getShopDetail,
@@ -20,6 +22,8 @@ const {
   updateUserDetails,
   uploadProfilePhoto,
   getShops,
+  shopDetails,
+  checkapi,
 } = require("./APIs/customers");
 
 const {
@@ -38,9 +42,13 @@ app.post("/shop/image", auth, uploadProfilePhotoShop);
 // customer routes
 app.post("/signup", signUpUser);
 app.get("/user", auth, getUserDetail);
-app.get("/shops", getShops);
+app.post("/shops", getShops);
 app.put("/user", auth, updateUserDetails);
 app.post("/image", auth, uploadProfilePhoto);
+app.get("/shop/:shopId", shopDetails);
+app.post("/reviews", getReviews);
+app.put("/review", auth, editReview);
+app.get("/checkapi", checkapi);
 
 // bookings routes
 app.post("/bookings", auth, getAllBookings);
@@ -51,5 +59,7 @@ app.delete("/booking/:bookingId", auth, deleteBooking);
 // common user routes
 app.post("/login", loginuser);
 app.get("/logout", auth, logoutuser);
+
+app.post("/rate", auth, rateShop);
 
 exports.api = functions.https.onRequest(app);

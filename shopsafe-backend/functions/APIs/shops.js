@@ -21,7 +21,7 @@ exports.signUpShop = (request, response) => {
     openingMinute: request.body.openingMinute,
     closingMinute: request.body.closingMinute,
     tags: request.body.tags,
-    shopRating: request.body.shopRating,
+    shopRating: [0, 0],
     // shopPhoto: "url",
     payment_modes: request.body.payment_modes,
     discount: request.body.discount,
@@ -31,7 +31,10 @@ exports.signUpShop = (request, response) => {
 
   const { valid, errors } = validateSignUpShop(newUser);
 
-  if (!valid) return response.status(400).json(errors);
+  if (!valid) {
+    console.error(errors);
+    return response.status(400).json(errors);
+  }
 
   let token, userId;
   db.doc(`/shops/${newUser.email}`)
@@ -89,17 +92,28 @@ exports.signUpShop = (request, response) => {
       return db.doc(`/shops/${newUser.email}`).set(userCredentials);
     })
     .then(() => {
-      return response.status(201).json({ token });
+      firebase
+        .auth()
+        .signOut()
+        .then(function () {
+          return response.status(200).json({ message: "Sign Up Successful" });
+          // Sign-out successful.
+        })
+        .catch(function (error) {
+          console.error(error);
+          return response.status(400).json({ error: error.code });
+          // An error happened.
+        });
     })
     .catch((err) => {
       console.error(err);
-      // return response.status(500).json({ general: 'Something went wrong, please try again' });
       return response.status(500).send(err.message);
     });
 };
 
 exports.getShopDetail = (request, response) => {
   let userData = {};
+
   db.doc(`/shops/${request.user.email}`)
     .get()
     .then((doc) => {
@@ -109,7 +123,7 @@ exports.getShopDetail = (request, response) => {
       }
     })
     .catch((error) => {
-      console.error(error);
+      // console.error(error);
       return response.status(500).json({ error: error.code });
     });
 };

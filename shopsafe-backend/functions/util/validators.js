@@ -42,13 +42,14 @@ exports.validateSignUpShop = (data) => {
     errors.openingHour = "Must be between 0 and 24";
   if (!data.closingHour || !(data.closingHour >= 0 && data.closingHour < 24))
     errors.closingHour = "Must be between 0 and 24";
+  // console.log(data.openingMinute);
   if (
-    !data.openingMinute ||
+    typeof data.openingMinute == "undefined" ||
     !(data.openingMinute >= 0 && data.openingMinute < 60)
   )
     errors.openingMinute = "Must be between 0 and 60";
   if (
-    !data.closingMinute ||
+    typeof data.closingMinute == "undefined" ||
     !(data.closingMinute >= 0 && data.closingMinute < 60)
   )
     errors.closingMinute = "Must be between 0 and 60";
@@ -108,6 +109,38 @@ exports.validateBooking = (data) => {
     errors.slotGroupEnds = "Slot ending time should not be empty";
   if (isEmpty(data.purchaseItems))
     errors.purchaseItems = "Purchase Items should not be empty";
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
+exports.validateRating = (data) => {
+  let errors = {};
+
+  if (!data.rating || !(data.rating > 0 && data.rating <= 5))
+    errors.rating = "Rating should be a valid value between 0 and 5";
+
+  if (isEmpty(data.shopId)) errors.shopId = "Shop ID should not be empty";
+
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
+exports.validateEditRating = (data) => {
+  let errors = {};
+
+  if (typeof data.review == "undefined" || isEmpty(data.review))
+    errors.review = "Review should not be empty";
+
+  if (typeof data.customerId == "undefined" || isEmpty(data.customerId))
+    errors.customerId = "Customer ID should not be empty";
+
+  if (typeof data.ratingId == "undefined" || isEmpty(data.ratingId))
+    errors.ratingId = "Rating ID should not be empty";
+
   return {
     errors,
     valid: Object.keys(errors).length === 0 ? true : false,
