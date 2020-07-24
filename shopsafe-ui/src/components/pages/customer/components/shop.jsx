@@ -13,290 +13,384 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PaymentIcon from "@material-ui/icons/Payment";
+import DirectionsBikeIcon from "@material-ui/icons/DirectionsBike";
+import IconButton from "@material-ui/core/IconButton";
+import StarRateOutlinedIcon from "@material-ui/icons/StarRateOutlined";
 
 const useStyles = (theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    background: "#ffffff",
-  },
-  details: {
-    display: "flex",
-    flexDirection: "column",
-    //padding: 10,
-    marginLeft: 8,
-    marginTop: 10,
-  },
-  content: {
-    flex: "1 0 auto",
-  },
-  cover: {
-    display: "flex",
-    flexDirection: "row",
-    // marginBottom:20,
-  },
-  controls: {
-    display: "flex",
-    alignItems: "center",
-    paddingLeft: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  playIcon: {
-    height: 38,
-    width: 38,
-  },
-  bim: {
-    //height: 'auto',
-    //backgroundImage: `url(${"https://picsum.photos/355"})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    //width:"100%",
-    // borderRadius:15,
-    // padding:10,
-    //width: `calc(100vw + 48px)`,
-    //margin: -24,
-    //padding: 24,
-  },
+    root: {
+        display: "flex",
+        flexDirection: "column",
+        background: "#ffffff",
+        width: "100%",
+        //width: window.innerWidth<500 ? (window.innerWidth*0.96) : 600,
+    },
+    details: {
+        display: "flex",
+        flexDirection: "column",
+        //padding: 10,
+        marginLeft: 8,
+        marginTop: 10,
+    },
+    content: {
+        flex: "1 0 auto",
+    },
+    cover: {
+        display: "flex",
+        flexDirection: "column",
+        // marginBottom:20,
+    },
+    controls: {
+        display: "flex",
+        alignItems: "center",
+        paddingLeft: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+    },
+    playIcon: {
+        height: 38,
+        width: 38,
+    },
+    bim: {
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+    },
 });
 
 class Shop extends Component {
-  state = {
-    imWidth: "90%",
-    
-  };
+    state = {
+        imWidth: "90%",
+    };
 
-  handleClick = () => {
-    this.props.history.push(`/customer/booknewslot/${this.props.data.uid}`);
-    console.log("Loved");
-  };
+    handleClick = () => {
+        //this.props.history.push(`/customer/shop/`);
+        this.props.history.push(`/customer/shop/${this.props.data.shopId}`);
+        console.log("Loved");
+    };
 
-  openedNow = () => {
-    let d = new Date();
-    let currentOffset = d.getTimezoneOffset();
-    let ISTOffset = 330;
-    let ISTTime = new Date(d.getTime() + (ISTOffset + currentOffset) * 60000);
-    const openingTime = new Date();
-    const closingTime = new Date();
-    const { openingHour, openingMinute, closingHour, closingMinute } = this.props.data;
-    openingTime.setHours(openingHour); openingTime.setMinutes(openingMinute);
-    closingTime.setHours(closingHour); closingTime.setMinutes(closingTime);
+    openedNow = () => {
+        let d = new Date();
+        let currentOffset = d.getTimezoneOffset();
+        let ISTOffset = 330;
+        let ISTTime = new Date(
+            d.getTime() + (ISTOffset + currentOffset) * 60000
+        );
+        const openingTime = new Date();
+        const closingTime = new Date();
+        const {
+            openingHour,
+            openingMinute,
+            closingHour,
+            closingMinute,
+        } = this.props.data;
+        openingTime.setHours(openingHour);
+        openingTime.setMinutes(openingMinute);
+        closingTime.setHours(closingHour);
+        closingTime.setMinutes(closingTime);
 
-    // return (
-    //   ISTTime.getTime() > openingTime.getTime() &&
-    //   ISTTime.getTime() < closingTime.getTime()
-    // );
-    return (
-      ISTTime.getHours() >= openingHour && ISTTime.getHours() <= closingHour
-    );
-  }
+        // return (
+        //   ISTTime.getTime() > openingTime.getTime() &&
+        //   ISTTime.getTime() < closingTime.getTime()
+        // );
 
-  time = (t) => {
-    let d = new Date();
-    d.setHours(t.hour);
-    d.setMinutes(t.minute);
-    d.setSeconds(0);
-    return d.toLocaleTimeString();
-  };
+        const currentTime =
+            ISTTime.getHours() * 3600 + ISTTime.getMinutes() * 60;
 
-  render() {
-    this.state.imWidth = window.innerWidth < 800 ? "100%" : "90%";
-    console.log(this.state.imWidth, window.screen.width);
-    const { classes, theme } = this.props;
-    const {
-      shopName: name,
-      address,
-      imageUrl,
-      discount,
-      openingTimeIST,
-      closingTimeIST,
-      tags: itemsAvailable,
-      shopRating: ratings,
-      //payment_modes,
-    } = this.props.data;
-    const imgUrl = imageUrl || "https://picsum.photos/" + Math.round(Math.random(0, 1) * 1000);
-    //const { openingTime, closingTime } = shopSchedule;
-    return (
-      <Box
-        className={classes.root}
-        boxShadow={5}
-        //border={0.5}
-        borderRadius="borderRadius"
-        borderRadius={10}
-        borderColor="primary.main"
-      >
-        <Box className={classes.cover}>
-          <Grid container spacing={2} xs={12} justify="center">
-            <Grid item xs={12} sm={4} justify="center">
-              <Box
-                className={classes.bim}
-                boxShadow={5}
-                style={{
-                  height: "200px",
-                  width: `${this.state.imWidth}`,
-                  borderRadius: 15,
-                  padding: 10,
-                  marginTop: 10,
-                  marginLeft: 10,
-                  marginBottom: 10,
-                  backgroundImage: `url(${imgUrl})`,
-                }}
-              >
-                <Chip
-                  label={(this.openedNow())?"Open":"Closed"}
-                  style={{
-                    background: "#ffd79f",
-                    fontSize: 17,
-                    fontWeight: "bold",
-                    color: "black",
-                  }}
-                ></Chip>
-              </Box>
-              <Typography
-                variant="body1"
-                align="center"
-                gutterBottom
-                style={{ paddingLeft: 10, margin: "auto" }}
-              >
-                <FiberManualRecordIcon
-                  style={{ color: "green", fontSize: 13, marginRight: 5 }}
-                />
-                {openingTimeIST}
-                <FiberManualRecordIcon style={{ color: "red", fontSize: 13 }} />
-                {closingTimeIST}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <Box className={classes.details}>
-                <Typography
-                  component="h5"
-                  variant="h5"
-                  style={{ color: "indigo" }}
+        return (
+            currentTime >= openingHour * 3600 + openingMinute * 60 &&
+            currentTime <= closingHour * 3600 + closingMinute * 60
+        );
+    };
+
+    time = (t) => {
+        let d = new Date();
+        d.setHours(t.hour);
+        d.setMinutes(t.minute);
+        d.setSeconds(0);
+        return d.toLocaleTimeString();
+    };
+
+    render() {
+        console.log("Shop Card", this.props.data);
+        this.state.imWidth = window.innerWidth < 800 ? "90%" : "100%";
+        const { classes, theme } = this.props;
+        const {
+            shopName: name,
+            address,
+            imageUrl,
+            discount,
+            distancemetric,
+            openingTimeIST,
+            closingTimeIST,
+            tags: itemsAvailable,
+            shopRating: ratings,
+            payment_modes,
+            travelDuration,
+        } = this.props.data;
+        const distance = distancemetric || -1;
+        const imgUrl =
+            imageUrl ||
+            "https://img.freepik.com/free-photo/two-beautiful-women-shopping-town_1303-16426.jpg?size=626&ext=jpg";
+        // "https://picsum.photos/" + Math.round(Math.random(0, 1) * 1000);
+        //const { openingTime, closingTime } = shopSchedule;
+        return (
+            <Grid item>
+                <Box
+                    className={classes.root}
+                    boxShadow={8}
+                    style={{ width: "95%" }}
+                    borderRadius="borderRadius"
+                    borderRadius={15}
+                    borderColor="primary.main"
+                    m={2}
                 >
-                  <b>{name}</b>
-                </Typography>
-                <Box style={{ display: "flex", flexDirection: "row" }}>
-                  <Rating
-                    name="half-rating-read"
-                    defaultValue={ratings[0]}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                    style={{ color: "red", padding: 5 }}
-                  />
-                  <Typography
-                    variant="subtitle1"
-                    color="textSecondary"
-                    style={{ paddingTop: 3 }}
-                  >
-                    {ratings[0]} ({ratings[1]} reviews)
-                  </Typography>
-                </Box>
-                <Typography variant="subtitle1" color="textSecondary">
-                  {address}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  <Box style={{ display: "flex", flexDirection: "row" }}>
-                    <LocationOnIcon />
-                    <Typography
-                      variant="body1"
-                      style={{ paddingBottom: 3, marginLeft: 5 }}
-                    >
-                      {"3 km"}
-                    </Typography>
-                  </Box>
-                  {true && (
-                    <Box style={{ display: "flex", flexDirection: "row" }}>
-                      <PaymentIcon style={{ color: "#00b300" }} />
-                      <Typography
-                        variant="body1"
-                        style={{ paddingBottom: 3, marginLeft: 5 }}
-                      >
-                        Accepts Cash and Online Payments
-                      </Typography>
+                    <Box className={classes.cover}>
+                        <Grid item container xs={12} direction="column">
+                            <Grid
+                                container
+                                spacing={2}
+                                xs={12}
+                                justify="center"
+                            >
+                                <Grid item xs={12} sm={5} justify="center">
+                                    <Box
+                                        className={classes.bim}
+                                        boxShadow={5}
+                                        style={{
+                                            backg: 0.5,
+                                            height: "200px",
+                                            width: `${this.state.imWidth}`,
+                                            borderRadius: 15,
+                                            padding: 10,
+                                            marginTop: 10,
+                                            marginLeft: 10,
+                                            marginBottom: 10,
+                                            backgroundImage: `url(${imgUrl})`,
+                                        }}
+                                    >
+                                        <Chip
+                                            label={
+                                                this.openedNow()
+                                                    ? "Open"
+                                                    : "Closed"
+                                            }
+                                            style={{
+                                                background: this.openedNow()
+                                                    ? "#00b476"
+                                                    : "#ef0052",
+                                                fontSize: 17,
+                                                fontWeight: "bold",
+                                                color: "white",
+                                            }}
+                                        ></Chip>
+                                    </Box>
+                                    <Typography
+                                        variant="body1"
+                                        align="center"
+                                        gutterBottom
+                                        style={{
+                                            paddingLeft: 10,
+                                            margin: "auto",
+                                        }}
+                                    >
+                                        <FiberManualRecordIcon
+                                            style={{
+                                                color: "green",
+                                                fontSize: 13,
+                                                marginRight: 5,
+                                            }}
+                                        />
+                                        {openingTimeIST}
+                                        <FiberManualRecordIcon
+                                            style={{
+                                                color: "red",
+                                                fontSize: 13,
+                                                marginLeft: 10,
+                                            }}
+                                        />
+                                        {closingTimeIST}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={7}>
+                                    <Box className={classes.details}>
+                                        <Typography
+                                            component="h4"
+                                            variant="h4"
+                                            style={{ color: "indigo" }}
+                                        >
+                                            <b>{name}</b>
+                                        </Typography>
+                                        {this.openedNow() || (
+                                            <Typography
+                                                variant="body1"
+                                                gutterBottom
+                                            >
+                                                Opens next at {openingTimeIST}
+                                            </Typography>
+                                        )}
+                                        <br />
+                                        <Box
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                            }}
+                                        >
+                                            <Chip
+                                                icon={
+                                                    <StarRateOutlinedIcon
+                                                        style={{
+                                                            color: "#ffffff",
+                                                        }}
+                                                    />
+                                                }
+                                                label={ratings[0]}
+                                                variant="contained"
+                                                style={{
+                                                    backgroundColor: "#58AC00",
+                                                    margin: 2,
+                                                    fontSize: 18,
+                                                    color: "white",
+                                                }}
+                                            />
+                                        </Box>
+                                        <br />
+                                        <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                        >
+                                            <Box
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                }}
+                                            >
+                                                <LocationOnIcon />
+                                                <Typography
+                                                    variant="body1"
+                                                    style={{
+                                                        paddingBottom: 3,
+                                                        marginLeft: 5,
+                                                        marginRight: 5,
+                                                    }}
+                                                >
+                                                    {`${distance} km`}
+                                                </Typography>
+                                                <DirectionsBikeIcon />
+                                                <Typography
+                                                    variant="body1"
+                                                    style={{
+                                                        paddingBottom: 3,
+                                                        marginLeft: 5,
+                                                    }}
+                                                >
+                                                    {travelDuration <= 3600
+                                                        ? `${Math.round(
+                                                              travelDuration /
+                                                                  60
+                                                          )} Min`
+                                                        : `${
+                                                              travelDuration /
+                                                              3600
+                                                          } Hour`}
+                                                </Typography>
+                                            </Box>
+                                            {true && (
+                                                <Box
+                                                    style={{
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                    }}
+                                                >
+                                                    <PaymentIcon
+                                                        style={{
+                                                            color: "#00b300",
+                                                        }}
+                                                    />
+                                                    <Typography
+                                                        variant="body1"
+                                                        style={{
+                                                            paddingBottom: 3,
+                                                            marginLeft: 5,
+                                                        }}
+                                                    >
+                                                        Accepts{" "}
+                                                        {payment_modes.join()}
+                                                    </Typography>
+                                                </Box>
+                                            )}
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                            <br />
+                            <Divider />
+                            <Grid item container xs={12} direction="row">
+                                <Grid
+                                    item
+                                    container
+                                    direction="row"
+                                    xs={7}
+                                    justify="center"
+                                    alignItems="center"
+                                >
+                                    <Box
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                        }}
+                                    >
+                                        <LocalOfferIcon
+                                            style={{ color: "#f445a6" }}
+                                        />
+                                        <Typography
+                                            variant="body1"
+                                            style={{
+                                                paddingBottom: 3,
+                                                color: "#f445a6",
+                                                marginLeft: 5,
+                                            }}
+                                        >
+                                            {discount}% off on all On-Time
+                                            orders
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid
+                                    item
+                                    container
+                                    xs={5}
+                                    direction="row"
+                                    justify="flex-end"
+                                >
+                                    <IconButton
+                                        style={{ color: "red", margin: 2 }}
+                                    >
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                    <Button
+                                        variant="contained"
+                                        onClick={this.handleClick}
+                                        style={{
+                                            backgroundColor: "green",
+                                            color: "white",
+                                            margin: 2,
+                                            fontSize: 17,
+                                        }}
+                                        endIcon={
+                                            <ArrowForwardIosIcon
+                                                style={{ paddingBottom: 1 }}
+                                            />
+                                        }
+                                    >
+                                        <b>Book Slot</b>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Box>
-                  )}
-                </Typography>
-                <Box style={{ display: "flex", flexDirection: "row" }}>
-                  <LocalOfferIcon style={{ color: "#ff0f39" }} />
-                  <Typography
-                    variant="body1"
-                    style={{
-                      paddingBottom: 3,
-                      color: "#ff375a",
-                      marginLeft: 5,
-                    }}
-                  >
-                    {discount}% off on all On-Time orders
-                  </Typography>
                 </Box>
-              </Box>
             </Grid>
-          </Grid>
-        </Box>
-        <Divider />
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          justify="center"
-          style={{ padding: 10, display: "flex", flexDirection: "row" }}
-        >
-          <Grid
-            xs={12}
-            xl={4}
-            md={4}
-            lg={4}
-            item
-            justify="center"
-            alignItems="center"
-            direction="column"
-          >
-            {itemsAvailable.map((label, index) => (
-              <Chip
-                key={index}
-                label={label}
-                style={{ margin: 2 }}
-                clickable
-                color={index % 2 === 0 ? "primary" : "secondary"}
-                variant="outlined"
-              />
-            ))}
-          </Grid>
-          <Grid
-            xs={12}
-            xl={8}
-            md={8}
-            lg={8}
-            item
-            justify="center"
-            alignItems="stretch"
-            direction="column"
-          >
-            <Box>
-              <Button
-                style={{ color: "red", margin: 2 }}
-                variant="outlined"
-                color="secondary"
-                startIcon={<FavoriteIcon />}
-              >
-                {" "}
-                mark Favourite
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={this.handleClick}
-                style={{ color: "green", margin: 2 }}
-                endIcon={<ArrowForwardIosIcon style={{ paddingBottom: 1 }} />}
-              >
-                Book Slot
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-        <br />
-      </Box>
-    );
-  }
+        );
+    }
 }
 
 export default withRouter(withStyles(useStyles, { withTheme: true })(Shop));

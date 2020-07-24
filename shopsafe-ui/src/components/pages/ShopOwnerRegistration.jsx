@@ -24,701 +24,719 @@ import Chip from "@material-ui/core/Chip";
 import Input from "@material-ui/core/Input";
 
 const useStyles = (theme) => ({
-  paper: {
-    marginTop: theme.spacing(3),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    borderStyles: "solid",
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    width: "100%",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  chip: {
-    margin: 2,
-  },
+    paper: {
+        marginTop: theme.spacing(3),
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        borderStyles: "solid",
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        width: "100%",
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: "100%", // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+    chips: {
+        display: "flex",
+        flexWrap: "wrap",
+    },
+    chip: {
+        margin: 2,
+    },
 });
 
 class ShopOwnerRegistration extends Component {
-  state = {
-    data: {
-      firstName: "",
-      lastName: "",
-      shopName:"",
-      email: "",
-      phoneNumber: "",
-      streetName: "",
-      cityName: "",
-      zipCode: "",
-      country: "India",
-      stateName: "",
-      password: "",
-      confirmPassword: "",
-      openingHour: 0,
-      openingMinute: 0,
-      closingHour: 0,
-      closingMinute: 0,
-      tags: [],
-      bookingTimeUnit: "",
-      maxConcurrent: 0,
-      payment_modes: [],
-      discount: 0,
-    },
-    error: {},
-  };
+    state = {
+        data: {
+            firstName: "",
+            lastName: "",
+            shopName: "",
+            email: "",
+            phoneNumber: "",
+            streetName: "",
+            cityName: "",
+            zipCode: "",
+            country: "India",
+            stateName: "",
+            password: "",
+            confirmPassword: "",
+            openingHour: 0,
+            openingMinute: 0,
+            closingHour: 0,
+            closingMinute: 0,
+            tags: [],
+            bookingTimeUnit: "",
+            maxConcurrent: 0,
+            payment_modes: [],
+            discount: 0,
+        },
+        error: {},
+    };
 
-  formData = {
-    states: getStateName(),
-    cityList: getStateWiseCity(this.state.stateName),
-  };
+    formData = {
+        states: getStateName(),
+        cityList: getStateWiseCity(this.state.stateName),
+    };
 
-  handleChange = ({ currentTarget: input }) => {
-    let data = { ...this.state.data };
-    data[input.name] = input.value;
-    this.setState({ data });
-  };
+    handleChange = ({ currentTarget: input }) => {
+        let data = { ...this.state.data };
+        data[input.name] = input.value;
+        this.setState({ data });
+    };
 
-  handleNumberChange = ({ currentTarget: input }) => {
-    let data = { ...this.state.data };
-    data[input.name] = parseInt(input.value);
-    this.setState({ data });
-  };
+    handleNumberChange = ({ currentTarget: input }) => {
+        let data = { ...this.state.data };
+        data[input.name] = parseInt(input.value);
+        this.setState({ data });
+    };
 
-  handleSelect = ({ target: { name, value } }) => {
-    let data = { ...this.state.data };
-    data[name] = value;
-    this.setState({ data });
-  };
+    handleSelect = ({ target: { name, value } }) => {
+        let data = { ...this.state.data };
+        data[name] = value;
+        this.setState({ data });
+    };
 
-  handleState = ({ target: { name, value } }) => {
-    let data = { ...this.state.data };
-    data[name] = value;
-    data.cityName = "";
-    this.setState({ data });
-  };
+    handleState = ({ target: { name, value } }) => {
+        let data = { ...this.state.data };
+        data[name] = value;
+        data.cityName = "";
+        this.setState({ data });
+    };
 
-  handleMultipleSelect = (event) => {};
+    handleMultipleSelect = (event) => {};
 
-  handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Registered", this.state);
+    handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Registered", this.state);
 
-    try {
-      const response = await ShopRegister(this.state.data);
-      console.log(response);
-      alert("SignedUp Successfully. Check your email to verify and Signin .");
-      window.location = "/";
-    } catch (ex) {
-      if (ex.response) {
-        const error = { ...ex.response.data };
-        console.log("error", ex.response);
-        this.setState({ error });
-      }
+        try {
+            const response = await ShopRegister(this.state.data);
+            console.log(response);
+            alert(
+                "SignedUp Successfully. Check your email to verify and Signin ."
+            );
+            window.location = "/";
+        } catch (ex) {
+            if (ex.response) {
+                const error = { ...ex.response.data };
+                console.log("error", ex.response);
+                this.setState({ error });
+            }
+        }
+    };
+
+    // handleSubmit = (e) => {
+    //   e.preventDefault();
+    //   console.log("Registered", this.state);
+    //   this.props.onSuccess("/shopowner");
+    //   this.props.auth("shopOwnerLogged");
+    // };
+
+    handleHidden = () => {
+        return this.props.tabValue !== this.props.index;
+    };
+
+    handleSignin = () => {
+        this.props.onSuccess("/signin");
+    };
+
+    render() {
+        console.log(this.state.data);
+
+        const { classes } = this.props;
+        const { states: statesList, cityList } = this.formData;
+        const { error } = this.state;
+        return (
+            <form
+                className={classes.form}
+                noValidate
+                onSubmit={this.handleSubmit}
+                hidden={this.props.tabValue !== this.props.index}
+            >
+                <Grid container spacing={2}>
+                    <Box
+                        borderColor="primary.main"
+                        border={1}
+                        borderRadius="borderRadius"
+                        m={1}
+                        p={2}
+                        style={{ width: "100%" }}
+                    >
+                        <TextField
+                            name="shopName"
+                            variant="filled"
+                            required
+                            fullWidth
+                            id="shopName"
+                            label="Shop Name"
+                            autoFocus
+                            error={error && error.shopName}
+                            helperText={error && error.shopName}
+                            onChange={this.handleChange}
+                        />
+                    </Box>
+                    <Box
+                        borderColor="primary.main"
+                        border={1}
+                        borderRadius="borderRadius"
+                        m={1}
+                        p={2}
+                        style={{ width: "100%" }}
+                    >
+                        <Typography variant="caption" display="block">
+                            Name and Contact Details
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="firstName"
+                                    variant="filled"
+                                    required
+                                    fullWidth
+                                    id="firstName"
+                                    label="First Name"
+                                    autoFocus
+                                    error={error && error.ownerName}
+                                    helperText={error && error.ownerName}
+                                    onChange={this.handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="filled"
+                                    required
+                                    fullWidth
+                                    id="lastName"
+                                    label="Last Name"
+                                    name="lastName"
+                                    onChange={this.handleChange}
+                                    error={error && error.ownerName}
+                                    helperText={error && error.ownerName}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="email"
+                                    variant="filled"
+                                    type="email"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Complete Email Address"
+                                    onChange={this.handleChange}
+                                    error={error && error.email}
+                                    helperText={error && error.email}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="filled"
+                                    required
+                                    fullWidth
+                                    id="phoneNumber"
+                                    label="Contact Number"
+                                    name="phoneNumber"
+                                    onChange={this.handleChange}
+                                    error={error && error.phoneNumber}
+                                    helperText={error && error.phoneNumber}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box
+                        borderColor="primary.main"
+                        border={1}
+                        borderRadius="borderRadius"
+                        m={1}
+                        p={2}
+                        style={{ width: "100%" }}
+                    >
+                        <Typography variant="caption" display="block">
+                            Address
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={4}>
+                                <FormControl
+                                    variant="filled"
+                                    fullWidth
+                                    className={classes.formControl}
+                                >
+                                    <InputLabel id="demo-simple-select-filled-label">
+                                        State
+                                    </InputLabel>
+                                    <Select
+                                        name="stateName"
+                                        labelId="demo-simple-select-filled-label"
+                                        id="demo-simple-select-filled"
+                                        value={this.state.data.stateName}
+                                        onChange={this.handleState}
+                                    >
+                                        <MenuItem value="">
+                                            <em>Choose...</em>
+                                        </MenuItem>
+                                        {statesList.map((state, i) => (
+                                            <MenuItem key={i} value={state}>
+                                                {state}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <FormControl
+                                    variant="filled"
+                                    fullWidth
+                                    className={classes.formControl}
+                                >
+                                    <InputLabel id="demo-simple-select-filled-label">
+                                        City
+                                    </InputLabel>
+                                    <Select
+                                        name="cityName"
+                                        labelId="demo-simple-select-filled-label"
+                                        id="demo-simple-select-filled"
+                                        value={this.state.data.cityName}
+                                        onChange={this.handleSelect}
+                                    >
+                                        <MenuItem value="">
+                                            <em>Choose...</em>
+                                        </MenuItem>
+                                        {getStateWiseCity(
+                                            this.state.data.stateName
+                                        ).map((city, i) => (
+                                            <MenuItem key={i} value={city}>
+                                                {city}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <TextField
+                                    variant="filled"
+                                    required
+                                    fullWidth
+                                    id="country"
+                                    label="Country"
+                                    name="country"
+                                    defaultValue="India"
+                                    //onChange={this.handleChange}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="filled"
+                                    required
+                                    fullWidth
+                                    id="zipCode"
+                                    label="Zip Code"
+                                    name="zipCode"
+                                    onChange={this.handleChange}
+                                    error={error && error.address}
+                                    helperText={error && error.address}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="filled"
+                                    required
+                                    fullWidth
+                                    id="streetName"
+                                    label="Street Name"
+                                    name="streetName"
+                                    onChange={this.handleChange}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box
+                        borderColor="primary.main"
+                        border={1}
+                        borderRadius="borderRadius"
+                        m={1}
+                        p={2}
+                        style={{ width: "100%" }}
+                    >
+                        <Typography variant="caption" display="block">
+                            Opening Time And Closing Time(Please use 24Hr
+                            format)
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6} sm={3}>
+                                <TextField
+                                    name="openingHour"
+                                    variant="filled"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            max: 24,
+                                            min: 0,
+                                        },
+                                    }}
+                                    fullWidth
+                                    id="openingHour"
+                                    label="Opening Hour"
+                                    error={error && error.openingHour}
+                                    helperText={error && error.openingHour}
+                                    onChange={this.handleNumberChange}
+                                />
+                            </Grid>
+                            <Grid item xs={6} sm={3}>
+                                <TextField
+                                    name="openingMinute"
+                                    variant="filled"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            max: 60,
+                                            min: 0,
+                                        },
+                                    }}
+                                    fullWidth
+                                    id="openingMinute"
+                                    label="Opening Minute"
+                                    error={error && error.openingMinute}
+                                    helperText={error && error.openingMinute}
+                                    onChange={this.handleNumberChange}
+                                />
+                            </Grid>
+                            <Grid item xs={6} sm={3}>
+                                <TextField
+                                    name="closingHour"
+                                    variant="filled"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            max: 24,
+                                            min: 0,
+                                        },
+                                    }}
+                                    fullWidth
+                                    id="closingHour"
+                                    label="Closing Hour"
+                                    error={error && error.closingHour}
+                                    helperText={error && error.closingHour}
+                                    onChange={this.handleNumberChange}
+                                />
+                            </Grid>
+                            <Grid item xs={6} sm={3}>
+                                <TextField
+                                    name="closingMinute"
+                                    variant="filled"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            max: 60,
+                                            min: 0,
+                                        },
+                                    }}
+                                    fullWidth
+                                    id="closingMinute"
+                                    label="Cloosing Minute"
+                                    error={error && error.closingMinute}
+                                    helperText={error && error.closingMinute}
+                                    onChange={this.handleNumberChange}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box
+                        borderColor="primary.main"
+                        border={1}
+                        borderRadius="borderRadius"
+                        m={1}
+                        p={2}
+                        style={{ width: "100%" }}
+                    >
+                        <Typography variant="caption" display="block">
+                            Discount And Times given to Customer per each Item
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="bookingTimeUnit"
+                                    variant="filled"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                        },
+                                    }}
+                                    fullWidth
+                                    id="bookingTimeUnit"
+                                    label="Average Times given for Five items(In Minutes)"
+                                    error={error && error.bookingTimeUnit}
+                                    helperText={error && error.bookingTimeUnit}
+                                    onChange={this.handleNumberChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="discount"
+                                    variant="filled"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                        },
+                                    }}
+                                    fullWidth
+                                    id="discount"
+                                    label="Discount"
+                                    error={error && error.discount}
+                                    helperText={error && error.discount}
+                                    onChange={this.handleNumberChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    name="maxConcurrent"
+                                    variant="filled"
+                                    type="number"
+                                    InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                        },
+                                    }}
+                                    fullWidth
+                                    id="maxConcurrent"
+                                    label="Max Customer Accomodetion"
+                                    error={error && error.maxConcurrent}
+                                    helperText={error && error.maxConcurrent}
+                                    onChange={this.handleNumberChange}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box
+                        borderColor="primary.main"
+                        border={1}
+                        borderRadius="borderRadius"
+                        m={1}
+                        p={2}
+                        style={{ width: "100%" }}
+                    >
+                        <Typography variant="caption" display="block">
+                            Items Type And Payments Method Avaialable
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <MultipleSelect
+                                    selectedItems={
+                                        this.state.data.payment_modes
+                                    }
+                                    handleChange={this.handleSelect}
+                                    classes={classes}
+                                    name="payment_modes"
+                                    label="Accepted Payment Modes"
+                                    theme={this.props.theme}
+                                    items={[
+                                        "Cards",
+                                        "Cash",
+                                        "Gpay",
+                                        "Digital Wallets",
+                                        "UPI",
+                                        "Other Methods",
+                                    ]}
+                                />
+                                <Typography
+                                    variant="caption"
+                                    display="block"
+                                    style={{ color: "red" }}
+                                >
+                                    {error && error.payment_modes}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <MultipleSelect
+                                    selectedItems={this.state.data.tags}
+                                    handleChange={this.handleSelect}
+                                    classes={classes}
+                                    name="tags"
+                                    label="Type of Items Available"
+                                    theme={this.props.theme}
+                                    items={[
+                                        "Meat & Fish",
+                                        "Grocery",
+                                        "Condiments(Spices)",
+                                        "Grains and Bread",
+                                        "Dairy & Eggs",
+                                        "Oil & Fat",
+                                        "Tinned & Dried Produce",
+                                        "Electronics",
+                                    ]}
+                                />
+                                <Typography
+                                    variant="caption"
+                                    display="block"
+                                    style={{ color: "red" }}
+                                >
+                                    {error && error.tags}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box
+                        borderColor="primary.main"
+                        border={1}
+                        borderRadius="borderRadius"
+                        m={1}
+                        p={2}
+                        style={{ width: "100%" }}
+                    >
+                        <Typography variant="caption" display="block">
+                            Password
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    onChange={this.handleChange}
+                                    error={error && error.password}
+                                    helperText={error && error.password}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    name="confirmPassword"
+                                    label="Confirm Password"
+                                    type="password"
+                                    id="password"
+                                    onChange={this.handleChange}
+                                    error={error && error.confirmPassword}
+                                    helperText={error && error.confirmPassword}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Grid item xs={12}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    value="allowExtraEmails"
+                                    color="primary"
+                                />
+                            }
+                            label="I want to receive inspiration, marketing promotions and updates via email."
+                        />
+                    </Grid>
+                </Grid>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                >
+                    Sign Up
+                </Button>
+                <Grid container justify="flex-end">
+                    <Grid item onClick={this.handleSignin}>
+                        <Link style={{ cursor: "pointer" }} variant="body2">
+                            Already have an account? Sign in
+                        </Link>
+                    </Grid>
+                </Grid>
+            </form>
+        );
     }
-  };
-
-  // handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Registered", this.state);
-  //   this.props.onSuccess("/shopowner");
-  //   this.props.auth("shopOwnerLogged");
-  // };
-
-  handleHidden = () => {
-    return this.props.tabValue !== this.props.index;
-  };
-
-  handleSignin = () => {
-    this.props.onSuccess("/signin");
-  };
-
-  render() {
-    console.log(this.state.data);
-
-    const { classes } = this.props;
-    const { states: statesList, cityList } = this.formData;
-    const { error } = this.state;
-    return (
-      <form
-        className={classes.form}
-        noValidate
-        onSubmit={this.handleSubmit}
-        hidden={this.props.tabValue !== this.props.index}
-      >
-        <Grid container spacing={2}>
-          <Box
-            borderColor="primary.main"
-            border={1}
-            borderRadius="borderRadius"
-            m={1}
-            p={2}
-            style={{ width: "100%" }}
-          >
-            <TextField
-              name="shopName"
-              variant="filled"
-              required
-              fullWidth
-              id="shopName"
-              label="Shop Name"
-              autoFocus
-              error={error && error.shopName}
-              helperText={error && error.shopName}
-              onChange={this.handleChange}
-            />
-          </Box>
-          <Box
-            borderColor="primary.main"
-            border={1}
-            borderRadius="borderRadius"
-            m={1}
-            p={2}
-            style={{ width: "100%" }}
-          >
-            <Typography variant="caption" display="block">
-              Name and Contact Details
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="firstName"
-                  variant="filled"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  error={error && error.ownerName}
-                  helperText={error && error.ownerName}
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="filled"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  onChange={this.handleChange}
-                  error={error && error.ownerName}
-                  helperText={error && error.ownerName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="email"
-                  variant="filled"
-                  type="email"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Complete Email Address"
-                  onChange={this.handleChange}
-                  error={error && error.email}
-                  helperText={error && error.email}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="filled"
-                  required
-                  fullWidth
-                  id="phoneNumber"
-                  label="Contact Number"
-                  name="phoneNumber"
-                  onChange={this.handleChange}
-                  error={error && error.phoneNumber}
-                  helperText={error && error.phoneNumber}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box
-            borderColor="primary.main"
-            border={1}
-            borderRadius="borderRadius"
-            m={1}
-            p={2}
-            style={{ width: "100%" }}
-          >
-            <Typography variant="caption" display="block">
-              Address
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <FormControl
-                  variant="filled"
-                  fullWidth
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-filled-label">
-                    State
-                  </InputLabel>
-                  <Select
-                    name="stateName"
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    value={this.state.data.stateName}
-                    onChange={this.handleState}
-                  >
-                    <MenuItem value="">
-                      <em>Choose...</em>
-                    </MenuItem>
-                    {statesList.map((state, i) => (
-                      <MenuItem key={i} value={state}>
-                        {state}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <FormControl
-                  variant="filled"
-                  fullWidth
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-filled-label">
-                    City
-                  </InputLabel>
-                  <Select
-                    name="cityName"
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    value={this.state.data.cityName}
-                    onChange={this.handleSelect}
-                  >
-                    <MenuItem value="">
-                      <em>Choose...</em>
-                    </MenuItem>
-                    {getStateWiseCity(this.state.data.stateName).map(
-                      (city, i) => (
-                        <MenuItem key={i} value={city}>
-                          {city}
-                        </MenuItem>
-                      )
-                    )}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  variant="filled"
-                  required
-                  fullWidth
-                  id="country"
-                  label="Country"
-                  name="country"
-                  defaultValue="India"
-                  //onChange={this.handleChange}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="filled"
-                  required
-                  fullWidth
-                  id="zipCode"
-                  label="Zip Code"
-                  name="zipCode"
-                  onChange={this.handleChange}
-                  error={error && error.address}
-                  helperText={error && error.address}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="filled"
-                  required
-                  fullWidth
-                  id="streetName"
-                  label="Street Name"
-                  name="streetName"
-                  onChange={this.handleChange}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box
-            borderColor="primary.main"
-            border={1}
-            borderRadius="borderRadius"
-            m={1}
-            p={2}
-            style={{ width: "100%" }}
-          >
-            <Typography variant="caption" display="block">
-              Opening Time And Closing Time(Please use 24Hr format)
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  name="openingHour"
-                  variant="filled"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      max: 24,
-                      min: 0,
-                    },
-                  }}
-                  fullWidth
-                  id="openingHour"
-                  label="Opening Hour"
-                  error={error && error.openingHour}
-                  helperText={error && error.openingHour}
-                  onChange={this.handleNumberChange}
-                />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  name="openingMinute"
-                  variant="filled"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      max: 60,
-                      min: 0,
-                    },
-                  }}
-                  fullWidth
-                  id="openingMinute"
-                  label="Opening Minute"
-                  error={error && error.openingMinute}
-                  helperText={error && error.openingMinute}
-                  onChange={this.handleNumberChange}
-                />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  name="closingHour"
-                  variant="filled"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      max: 24,
-                      min: 0,
-                    },
-                  }}
-                  fullWidth
-                  id="closingHour"
-                  label="Closing Hour"
-                  error={error && error.closingHour}
-                  helperText={error && error.closingHour}
-                  onChange={this.handleNumberChange}
-                />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  name="closingMinute"
-                  variant="filled"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      max: 60,
-                      min: 0,
-                    },
-                  }}
-                  fullWidth
-                  id="closingMinute"
-                  label="Cloosing Minute"
-                  error={error && error.closingMinute}
-                  helperText={error && error.closingMinute}
-                  onChange={this.handleNumberChange}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box
-            borderColor="primary.main"
-            border={1}
-            borderRadius="borderRadius"
-            m={1}
-            p={2}
-            style={{ width: "100%" }}
-          >
-            <Typography variant="caption" display="block">
-              Discount And Times given to Customer per each Item
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="bookingTimeUnit"
-                  variant="filled"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      min: 0,
-                    },
-                  }}
-                  fullWidth
-                  id="bookingTimeUnit"
-                  label="Average Times given for Five items(In Minutes)"
-                  error={error && error.bookingTimeUnit}
-                  helperText={error && error.bookingTimeUnit}
-                  onChange={this.handleNumberChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="discount"
-                  variant="filled"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      min: 0,
-                    },
-                  }}
-                  fullWidth
-                  id="discount"
-                  label="Discount"
-                  error={error && error.discount}
-                  helperText={error && error.discount}
-                  onChange={this.handleNumberChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  name="maxConcurrent"
-                  variant="filled"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      min: 0,
-                    },
-                  }}
-                  fullWidth
-                  id="maxConcurrent"
-                  label="Max Customer Accomodetion"
-                  error={error && error.maxConcurrent}
-                  helperText={error && error.maxConcurrent}
-                  onChange={this.handleNumberChange}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box
-            borderColor="primary.main"
-            border={1}
-            borderRadius="borderRadius"
-            m={1}
-            p={2}
-            style={{ width: "100%" }}
-          >
-            <Typography variant="caption" display="block">
-              Items Type And Payments Method Avaialable
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <MultipleSelect
-                  selectedItems={this.state.data.payment_modes}
-                  handleChange={this.handleSelect}
-                  classes={classes}
-                  name="payment_modes"
-                  label="Accepted Payment Modes"
-                  theme={this.props.theme}
-                  items={[
-                    "Cards",
-                    "Cash",
-                    "Gpay",
-                    "Digital Wallets",
-                    "UPI",
-                    "Other Methods",
-                  ]}
-                />
-                <Typography
-                  variant="caption"
-                  display="block"
-                  style={{ color: "red" }}
-                >
-                  {error && error.payment_modes}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <MultipleSelect
-                  selectedItems={this.state.data.tags}
-                  handleChange={this.handleSelect}
-                  classes={classes}
-                  name="tags"
-                  label="Type of Items Available"
-                  theme={this.props.theme}
-                  items={[
-                    "Meat & Fish",
-                    "Condiments(Spices)",
-                    "Grains and Bread",
-                    "Dairy & Eggs",
-                    "Oil & Fat",
-                    "Tinned & Dried Produce",
-                    "",
-                  ]}
-                />
-                <Typography
-                  variant="caption"
-                  display="block"
-                  style={{ color: "red" }}
-                >
-                  {error && error.tags}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-          <Box
-            borderColor="primary.main"
-            border={1}
-            borderRadius="borderRadius"
-            m={1}
-            p={2}
-            style={{ width: "100%" }}
-          >
-            <Typography variant="caption" display="block">
-              Password
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  onChange={this.handleChange}
-                  error={error && error.password}
-                  helperText={error && error.password}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  id="password"
-                  onChange={this.handleChange}
-                  error={error && error.confirmPassword}
-                  helperText={error && error.confirmPassword}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive inspiration, marketing promotions and updates via email."
-            />
-          </Grid>
-        </Grid>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          Sign Up
-        </Button>
-        <Grid container justify="flex-end">
-          <Grid item onClick={this.handleSignin}>
-            <Link style={{ cursor: "pointer" }} variant="body2">
-              Already have an account? Sign in
-            </Link>
-          </Grid>
-        </Grid>
-      </form>
-    );
-  }
 }
 
 export default withStyles(useStyles, { withTheme: true })(
-  ShopOwnerRegistration
+    ShopOwnerRegistration
 );
 
 class MultipleSelect extends Component {
-  state = {
-    items: this.props.items,
-  };
-
-  getStyles = (item, selectedItems, theme) => {
-    return {
-      fontWeight:
-        selectedItems.indexOf(item) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
+    state = {
+        items: this.props.items,
     };
-  };
 
-  MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: 224,
-        width: 250,
-      },
-    },
-  };
+    getStyles = (item, selectedItems, theme) => {
+        return {
+            fontWeight:
+                selectedItems.indexOf(item) === -1
+                    ? theme.typography.fontWeightRegular
+                    : theme.typography.fontWeightMedium,
+        };
+    };
 
-  render() {
-    const { selectedItems, handleChange, classes, theme, name, label } = this.props;
+    MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: 224,
+                width: 250,
+            },
+        },
+    };
 
-    return (
-      <FormControl className={classes.formControl} variant="filled">
-        <InputLabel id="demo-mutiple-chip-label">{label}</InputLabel>
-        <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
-          multiple
-          name={name}
-          value={selectedItems}
-          onChange={handleChange}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={(selected) => (
-            <div className={classes.chips}>
-              {selected.map((value) => (
-                <Chip
-                  key={value}
-                  label={value}
-                  color="primary"
-                  className={classes.chip}
-                />
-              ))}
-            </div>
-          )}
-          MenuProps={this.MenuProps}
-        >
-          {this.props.items.map((item, i) => (
-            <MenuItem
-              key={item}
-              value={item}
-              style={this.getStyles(item, selectedItems, theme)}
-            >
-              {item}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    );
-  }
+    render() {
+        const {
+            selectedItems,
+            handleChange,
+            classes,
+            theme,
+            name,
+            label,
+        } = this.props;
+
+        return (
+            <FormControl className={classes.formControl} variant="filled">
+                <InputLabel id="demo-mutiple-chip-label">{label}</InputLabel>
+                <Select
+                    labelId="demo-mutiple-chip-label"
+                    id="demo-mutiple-chip"
+                    multiple
+                    name={name}
+                    value={selectedItems}
+                    onChange={handleChange}
+                    input={<Input id="select-multiple-chip" />}
+                    renderValue={(selected) => (
+                        <div className={classes.chips}>
+                            {selected.map((value) => (
+                                <Chip
+                                    key={value}
+                                    label={value}
+                                    color="primary"
+                                    className={classes.chip}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    MenuProps={this.MenuProps}
+                >
+                    {this.props.items.map((item, i) => (
+                        <MenuItem
+                            key={item}
+                            value={item}
+                            style={this.getStyles(item, selectedItems, theme)}
+                        >
+                            {item}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+        );
+    }
 }
