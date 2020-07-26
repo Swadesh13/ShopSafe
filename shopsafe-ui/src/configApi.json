@@ -1,9 +1,14 @@
 {
   "login": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/login",
+  "logout": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/logout",
   "customerSignup": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/signup",
   "shopSignup": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/signupshop",
-  "myBookings": "",
+  "myBookings": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/bookings",
+  "editBooking": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/booking/",
   "shopBookings": "",
-  "shopList": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shops"
+  "shopList": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shops",
+  "shopData": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shop",
+  "bookSlot": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/booking",
+  "reviews": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/reviews"
   
 }

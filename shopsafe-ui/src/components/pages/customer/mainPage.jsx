@@ -27,163 +27,123 @@ import SignIn from "../../pages/signin";
 import MyBookings from "./myBookings";
 import MyProfile from "./profile";
 import Logout from "./Logout";
+import ShopPage from "./shopPage/shopPage";
 
 const drawerWidth = 240;
 
 const useStyles = (theme) => ({
-  root: {
-    display: "flex",
-  },
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
-      flexShrink: 0,
+    root: {
+        display: "flex",
+        width: "100%",
     },
-  },
-  appBar: {
-    // [theme.breakpoints.up('sm')]: {
-    //   width: `calc(100% - ${drawerWidth}px)`,
-    //   marginLeft: drawerWidth,
-    // },
-    background: "#f98b88",
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
+    drawer: {
+        [theme.breakpoints.up("sm")]: {
+            width: drawerWidth,
+            flexShrink: 0,
+        },
     },
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  largeAvatar: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-    margin: "auto",
-  },
+    appBar: {
+        // [theme.breakpoints.up('sm')]: {
+        //   width: `calc(100% - ${drawerWidth}px)`,
+        //   marginLeft: drawerWidth,
+        // },
+        background: "#f98b88",
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up("sm")]: {
+            display: "none",
+        },
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    content: {
+        flexGrow: 1,
+        width: "100%",
+        padding: theme.spacing(3),
+    },
+    largeAvatar: {
+        width: theme.spacing(15),
+        height: theme.spacing(15),
+        margin: "auto",
+    },
 });
 
 class MainPage extends Component {
-  state = {
-    data: [
-      { path: "/customer/profile", label: "Profile", icon: <AccountBoxIcon /> },
-      {
-        path: "/customer/dashboard",
-        label: "Dashboard",
-        icon: <DashboardIcon />,
-      },
-      {
-        path: "/customer/booking",
-        label: "Bookings",
-        icon: <BookmarksRoundedIcon />,
-      },
-      {
-        path: "/customer/logout",
-        label: "Logout",
-        icon: <PowerSettingsNewRoundedIcon />,
-      },
-    ],
-    mobileOpen: false,
-  };
+    state = {
+        data: [
+            {
+                path: "/customer/profile",
+                label: "Profile",
+                icon: <AccountBoxIcon />,
+            },
+            {
+                path: "/customer/dashboard",
+                label: "Dashboard",
+                icon: <DashboardIcon />,
+            },
+            {
+                path: "/customer/booking",
+                label: "Bookings",
+                icon: <BookmarksRoundedIcon />,
+            },
+            {
+                path: "/customer/logout",
+                label: "Logout",
+                icon: <PowerSettingsNewRoundedIcon />,
+            },
+        ],
+    };
 
-  handleDrawerToggle = () => {
-    this.setState({ mobileOpen: !this.state.mobileOpen });
-  };
+    handleClick = (path) => {
+        this.props.history.push(path);
+    };
 
-  handleClick = (path) => {
-    this.props.history.push(path);
-  };
+    render() {
+        const { window, classes, theme } = this.props;
+        const container =
+            window !== undefined ? () => window().document.body : undefined;
 
-  drawer = (
-    <div>
-      <div className={this.props.classes.toolbar} style={{ padding: 10 }}>
-        <Avatar
-          src={this.props.userData.imageUrl}
-          className={this.props.classes.largeAvatar}
-        />
-        <br />
-        <Typography variant="h5" component="h2" align="center">
-          {this.props.userData.userName}
-        </Typography>
-      </div>
-      <Divider />
-      <List>
-        {this.state.data.map((item, index) => (
-          <ListItem
-            button
-            key={index}
-            onClick={() => this.handleClick(item.path)}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.label} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+        return (
+            <div className={classes.root}>
+                <CssBaseline />
 
-  render() {
-    const { window, classes, theme } = this.props;
-    const container =
-      window !== undefined ? () => window().document.body : undefined;
-
-    return (
-      <div className={classes.root}>
-        <CssBaseline />
-
-        {/* <nav className={classes.drawer} aria-label="mailbox folders">
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={this.state.mobileOpen}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {this.drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {this.drawer}
-          </Drawer>
-        </Hidden>
-      </nav> */}
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Switch>
-            <Route
-              path="/customer/profile"
-              component={() => <MyProfile userData={this.props.userData} />}
-            />
-            <Route path="/customer/dashboard" component={Shops} />
-            <Route path="/customer/booknewslot/:uid" component={BookNewSlot} />
-            <Route path="/customer/booking/" component={MyBookings} />
-            <Route path="/customer/logout/" component={Logout} />
-            <Route path="/" component={Shops} />
-          </Switch>
-        </main>
-      </div>
-    );
-  }
+                <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <Switch>
+                        <Route
+                            path="/customer/profile"
+                            component={() => (
+                                <MyProfile userData={this.props.userData} />
+                            )}
+                        />
+                        <Route
+                            path="/customer/dashboard"
+                            component={() => <Shops />}
+                        />
+                        <Route
+                            path="/customer/booknewslot/:uid"
+                            component={BookNewSlot}
+                        />
+                        <Route
+                            path="/customer/booking/"
+                            component={MyBookings}
+                        />
+                        <Route path="/customer/logout/" component={Logout} />
+                        <Route
+                            path="/customer/shop/:shopId?"
+                            component={ShopPage}
+                        />
+                        <Route path="/" component={() => <Shops />} />
+                        {/* <Route path="/" component={ShopPage} /> */}
+                    </Switch>
+                </main>
+            </div>
+        );
+    }
 }
 
 export default withRouter(withStyles(useStyles, { withTheme: true })(MainPage));
