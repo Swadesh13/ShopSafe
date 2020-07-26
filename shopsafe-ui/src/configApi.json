@@ -4,6 +4,7 @@
   "customerSignup": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/signup",
   "shopSignup": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/signupshop",
   "myBookings": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/bookings",
+  "editBooking": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/booking/",
   "shopBookings": "",
   "shopList": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shops",
   "shopData": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shop",

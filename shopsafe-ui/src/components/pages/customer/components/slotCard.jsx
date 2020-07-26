@@ -70,6 +70,17 @@ const useStyles = (theme) => ({
     },
 });
 
+function timeString(h, m = 0) {
+    let d = new Date();
+    d.setHours(h);
+    d.setMinutes(m);
+    return d.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+    });
+}
+
 class SlotCard extends Component {
     state = {
         expanded: false,
@@ -89,6 +100,15 @@ class SlotCard extends Component {
             console.log(ex);
         }
         this.setState({ isLoading: false });
+    }
+
+    handleSlotChange = newData => {
+        let data = { ...this.state.data };
+        data.arrivalHour = newData.arrivalHour;
+        data.arrivalMinute = newData.arrivalMinute;
+        data.deliveryHour = newData.deliveryHour;
+        data.deliveryMinute = newData.deliveryMinute;
+        this.setState({ data });
     }
 
     handleExpandClick = () => {
@@ -112,8 +132,7 @@ class SlotCard extends Component {
     render() {
         const { classes } = this.props;
         const { expanded, data, open, isLoading, shopData } = this.state;
-        const { handleClose, handleEdit } = this;
-        console.log("shopdata", shopData);
+        const { handleClose, handleEdit,handleSlotChange } = this;
         return (
             <Card
                 className={classes.activeRoot}
@@ -127,7 +146,7 @@ class SlotCard extends Component {
                 )}
                 <Grid justify="center">
                     <QRCode
-                        value={data.customerId}
+                        value={data.bookingId}
                         style={{ margin: "auto" }}
                         className={classes.media}
                     />
@@ -135,15 +154,17 @@ class SlotCard extends Component {
 
                 <CardContent>
                     <Typography
-                        variant="body2"
+                        variant="h6"
                         justify="center"
                         align="center"
                         color="textSecondary"
                         component="p"
                     >
-                        {`${data.arrivalTimeIST} ->${data.deliveryTimeIST}`}
+                        <b>
+                            {timeString(data.arrivalHour, data.arrivalMinute)} →{" "}
+                            {timeString(data.deliveryHour, data.deliveryMinute)}
+                        </b>
                         <br />
-                        Booking ID: {data.bookingId}
                     </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
@@ -163,10 +184,17 @@ class SlotCard extends Component {
                         className={classes.margin}
                         color="secondary"
                         startIcon={<DeleteIcon />}
+                        onClick={()=> this.props.handleDelete(data.bookingId)}
                     >
                         Delete
                     </Button>
-                    <EditBookings data={this.state.shopData} bookingDetails={data} open={open} handleClose={handleClose} />
+                    <EditBookings
+                        data={this.state.shopData}
+                        bookingDetails={data}
+                        open={open}
+                        handleClose={handleClose}
+                        setSlotTime={handleSlotChange}
+                    />
                     <IconButton
                         className={clsx(classes.expand, {
                             [classes.expandOpen]: expanded,

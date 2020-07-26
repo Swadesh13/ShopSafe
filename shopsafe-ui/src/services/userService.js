@@ -100,24 +100,37 @@ export const logout = () => {
     return response;
 };
 
-export const bookNewSlot = (data,id) => {
+export const bookNewSlot = (data, id) => {
     const { itemList, period, slot } = data;
     const slotName = period.toLowerCase();
     const body = {
-        "purchaseItems": itemList.join(),
-        "slotName":slotName,
-        "isShop": false,
-        "shopId": id,
-        "slotGroupBegins": slot.start,
-        "slotGroupEnds": slot.end,
+        purchaseItems: itemList.join(),
+        slotName: slotName,
+        isShop: false,
+        shopId: id,
+        slotGroupBegins: slot.start,
+        slotGroupEnds: slot.end,
     };
     console.log(body);
     return http.protectedPost(api.bookSlot, body);
 };
 
-export const updateRadius = r => {
+export const updateRadius = (r) => {
     const rad = r * 1000;
     return http.get(api.shopList, {
         radius: rad,
     });
-}
+};
+
+export const updateBookings = (data, id) => {
+    return http.protectedPut(api.editBooking + id, {
+        slotName: data.period.toLowerCase(),
+        slotGroupBegins: data.slot.start,
+        slotGroupEnds: data.slot.end,
+        isShop: false,
+    });
+};
+
+export const deleteSlots = (id) => {
+    return http.protectedDelete(api.editBooking + id, { isShop: false });
+};

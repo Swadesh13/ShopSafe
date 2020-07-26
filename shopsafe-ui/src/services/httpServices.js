@@ -26,9 +26,30 @@ const protectedGet = (api) => {
     return response;
 };
 
+const protectedDelete = (api,body) => {
+    const jwt = token();
+    const response = Axios.delete(api, {
+        headers: {
+            Authorization: `Bearer ${jwt}`,
+        },
+        data:body,
+    });
+    return response;
+};
+
 const protectedPost = (api, body) => {
     const jwt = token();
     const response = Axios.post(api, body, {
+        headers: {
+            'Authorization': `Bearer ${jwt}`,
+        },
+    });
+    return response;
+};
+
+const protectedPut = (api, body) => {
+    const jwt = token();
+    const response = Axios.put(api, body, {
         headers: {
             'Authorization': `Bearer ${jwt}`,
         },
@@ -47,4 +68,6 @@ export default {
     delete: Axios.delete,
     protectedGet,
     protectedPost,
+    protectedPut,
+    protectedDelete,
 };

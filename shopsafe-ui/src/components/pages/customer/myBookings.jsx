@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { getMyBookings } from "../../../services/dataServices";
+import { deleteSlots } from "../../../services/userService";
 
 class MyBookings extends Component {
     state = {
@@ -42,6 +43,25 @@ class MyBookings extends Component {
         return ctime.getTime() >= slotStartTme.getTime();
     };
 
+    handleDelete = async id => {
+        const copy = [...this.state.slotData];
+        this.setState({ slotData: copy.filter(c => c.bookingId !== id) });
+        console.log(
+            "data updated",
+            this.state.slotData
+        );
+        try {
+            console.log(copy.length);
+            const { data } = await deleteSlots(id);
+            console.log(data);
+            this.forceUpdate();
+        } catch (ex) {
+            alert("An error occured");
+            console.log(ex.response);
+            this.setState({ slotData: copy });
+        }
+    }
+
     numberOfActiveBookngs = () => {
         let count = 0;
         for (const item of this.state.slotData) {
@@ -55,7 +75,7 @@ class MyBookings extends Component {
     };
 
     render() {
-        console.log("render");
+        console.log("render the slots",this.state.slotData);
         const { slotData: data } = this.state;
         return (
             <Grid container spacing={2} justify="center">
@@ -81,6 +101,7 @@ class MyBookings extends Component {
                                         <SlotCard
                                             data={cards}
                                             isExpired={this.isExpired(cards)}
+                                            handleDelete={this.handleDelete}
                                         />
                                     </Grid>
                                 )
@@ -98,13 +119,14 @@ class MyBookings extends Component {
                         {this.state.showPastSlot &&
                             data.map(
                                 (cards, i) =>
-                                    cards.active || (
+                                    this.isExpired(cards) && (
                                         <Grid key={i} item sm={4} md={3}>
                                             <SlotCard
                                                 data={cards}
                                                 isExpired={this.isExpired(
                                                     cards
                                                 )}
+                                                handleDelete={this.handleDelete}
                                             />
                                         </Grid>
                                     )

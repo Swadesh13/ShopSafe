@@ -46,6 +46,7 @@ class Order extends Component {
         item: "",
         openModal: false,
         dialogueData: {},
+        errors:{},
     };
 
     // componentDidMount() {
@@ -158,7 +159,7 @@ class Order extends Component {
     handleAddItem = () => {
         const data = { ...this.state.data };
         if (this.state.item) data.itemList.push(this.state.item);
-        this.setState({ data, item: "" });
+        this.setState({ data, item: "",errors:{} });
     };
 
     handleSlotTime = (e) => {
@@ -191,7 +192,8 @@ class Order extends Component {
             this.setState({ openModal: true });
         } catch (ex) {
             console.log(ex);
-            alert("An error occured, Try re signin and booking");
+            this.setState({ errors: ex.response.data });
+            //alert("An error occured, Try re signin and booking");
         }
     };
 
@@ -328,6 +330,14 @@ class Order extends Component {
                                     ))}
                                 </Box>
                             </Grid>
+                            {this.state.errors &&
+                            this.state.errors.purchaseItems ? (
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" color="error">
+                                        {this.state.errors.purchaseItems}
+                                    </Typography>
+                                </Grid>
+                            ) : null}
                         </Grid>
                     </Box>
                     <Box
@@ -348,6 +358,7 @@ class Order extends Component {
                         <br />
                         <Grid item container direction="row" justify="center">
                             <Button
+                                disabled={Object.keys(this.state.data.slot).length===0}
                                 color="primary"
                                 variant="contained"
                                 onClick={handleBooking}

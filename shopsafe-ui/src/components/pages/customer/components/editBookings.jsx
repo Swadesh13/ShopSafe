@@ -7,12 +7,12 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
 import Chip from "@material-ui/core/Chip";
 import Typography from "@material-ui/core/Typography";
 import DialogContent from "@material-ui/core/DialogContent";
+import { updateBookings } from "../../../../services/userService";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = (theme) => ({
     formControl: {
@@ -62,7 +62,10 @@ class EditBookings extends Component {
         slotLabel: `${timeString(
             this.props.bookingDetails.slotGroupBegins
         )} - ${timeString(this.props.bookingDetails.slotGroupEnds)}`,
-        item: "",
+        noticeBody: {},
+        isLoading: false,
+        submitted: false,
+        success: true,
     };
 
     formData = {
@@ -129,17 +132,29 @@ class EditBookings extends Component {
         return slotTimeArr;
     };
 
+    handleBooking = async () => {
+        this.setState({ submitted: true, isLoading: true });
+        try {
+            const { data } = await updateBookings(
+                this.state.data,
+                this.props.bookingDetails.bookingId
+            );
+            this.setState({ noticeBody: data });
+            this.props.setSlotTime(data);
+        } catch (ex) {
+            console.log("ex logging", ex);
+            this.setState({ noticeBody: ex.response.data, success: false });
+            console.log(this.state.noticeBody, ex.response.data);
+            //alert("An error occured, Try re signin and booking");
+        }
+        this.setState({ isLoading: false });
+    };
+
     handlePeriod = (e) => {
         const data = { ...this.state.data };
         data.period = e.target.value.label;
         //data.slot = this.getSlotTimes(e.target.value.slot)[0] || "" ;
-        this.setState({ data });
-    };
-
-    handleAddItem = () => {
-        const data = { ...this.state.data };
-        if (this.state.item) data.itemList.push(this.state.item);
-        this.setState({ data, item: "" });
+        this.setState({ data, slotLabel: "" });
     };
 
     handleSlotTime = (e) => {
@@ -155,22 +170,25 @@ class EditBookings extends Component {
         this.setState({ [input.name]: input.value });
     };
 
-    handleDelete = (item) => {
-        const data = { ...this.state.data };
-        const index = data.itemList.indexOf(item);
-        data.itemList.splice(index, 1);
-        this.setState({ data });
-    };
+    handleClose = () => {
+        this.setState({
+            noticeBody: {},
+            isLoading: false,
+            submitted: false,
+            success: true,
+        });
+        this.props.handleClose();
+    }
 
     render() {
-        const { handleClose, open, classes } = this.props;
-        const { data, item, slotLabel } = this.state;
+        const {  open, classes } = this.props;
+        const { data, slotLabel } = this.state;
         const { period } = this.formData;
         const {
             handlePeriod,
             handleSlotTime,
-            handleAddItem,
-            handleDelete,
+            handleBooking,
+            handleClose,
         } = this;
 
         return (
@@ -179,149 +197,205 @@ class EditBookings extends Component {
                 onClose={handleClose}
                 aria-labelledby="simple-dialog-title"
                 open={open}
-                style={{ width: window.innerWidth * 0.6,margin:'auto' }}
+                style={{ width: window.innerWidth * 0.6, margin: "auto" }}
             >
-                <form style={{ width: "100%" }}>
-                    <Box
-                        style={{ width: "100%", backgroundColor: "white" }}
-                        m={2}
-                        p={1}
-                    >
-                        <Grid item container xs={12}>
-                            <Grid item xs={12} md={6}>
-                                <FormControl
-                                    variant="outlined"
-                                    className={classes.formControl}
-                                    required
-                                >
-                                    <InputLabel id="SelectPeriod">
-                                        Slot Type
-                                    </InputLabel>
-                                    <Select
-                                        labelId="SelectPeriod"
-                                        id="SelectPeriod"
-                                        value={
-                                            period.filter(
-                                                (c) =>
-                                                    !c.label.localeCompare(
-                                                        data.period
-                                                    )
-                                            )[0]
-                                        }
-                                        onChange={handlePeriod}
-                                        label="Period"
+                {!this.state.submitted ? (
+                    <form style={{ width: "100%" }}>
+                        <Box
+                            style={{ width: "100%", backgroundColor: "white" }}
+                            m={2}
+                            p={1}
+                        >
+                            <Grid item container xs={12}>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl
+                                        variant="outlined"
+                                        className={classes.formControl}
+                                        required
                                     >
-                                        {period.map((time, i) => (
-                                            <MenuItem key={i} value={time}>
-                                                {time.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                                        <InputLabel id="SelectPeriod">
+                                            Slot Type
+                                        </InputLabel>
+                                        <Select
+                                            labelId="SelectPeriod"
+                                            id="SelectPeriod"
+                                            value={
+                                                period.filter(
+                                                    (c) =>
+                                                        !c.label.localeCompare(
+                                                            data.period
+                                                        )
+                                                )[0]
+                                            }
+                                            onChange={handlePeriod}
+                                            label="Period"
+                                        >
+                                            {period.map((time, i) => (
+                                                <MenuItem key={i} value={time}>
+                                                    {time.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl
+                                        variant="outlined"
+                                        required
+                                        className={classes.formControl}
+                                    >
+                                        <InputLabel id="SlotTime">
+                                            Slot Time
+                                        </InputLabel>
+                                        <Select
+                                            labelId="SlotTime"
+                                            id="SlotTime"
+                                            value={slotLabel}
+                                            onChange={handleSlotTime}
+                                            label="Slot Time"
+                                        >
+                                            {this.getSlotTimes().map(
+                                                (item, i) => (
+                                                    <MenuItem
+                                                        key={i}
+                                                        value={item.label}
+                                                    >
+                                                        {item.label}
+                                                    </MenuItem>
+                                                )
+                                            )}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} md={6}>
-                                <FormControl
-                                    variant="outlined"
-                                    required
-                                    className={classes.formControl}
-                                >
-                                    <InputLabel id="SlotTime">
-                                        Slot Time
-                                    </InputLabel>
-                                    <Select
-                                        labelId="SlotTime"
-                                        id="SlotTime"
-                                        value={slotLabel}
-                                        onChange={handleSlotTime}
-                                        label="Slot Time"
-                                    >
-                                        {this.getSlotTimes().map((item, i) => (
-                                            <MenuItem
+                        </Box>
+                        <Box
+                            borderRadius={5}
+                            style={{ width: "100%", backgroundColor: "white" }}
+                            m={2}
+                            p={1}
+                        >
+                            <Grid item container xs={12}>
+                                <Grid item xs={12}>
+                                    <Box>
+                                        {data.itemList.map((value, i) => (
+                                            <Chip
                                                 key={i}
-                                                value={item.label}
-                                            >
-                                                {item.label}
-                                            </MenuItem>
+                                                label={value}
+                                                color="secondary"
+                                                className={classes.chip}
+                                            />
                                         ))}
-                                    </Select>
-                                </FormControl>
+                                    </Box>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Box>
-                    <Box
-                        borderRadius={5}
-                        style={{ width: "100%", backgroundColor: "white" }}
-                        m={2}
-                        p={1}
-                    >
-                        <Grid item container xs={12}>
-                            <Grid item xs={12} md={8}>
-                                <TextField
-                                    id="standard-basic"
-                                    name="item"
-                                    value={item}
-                                    onChange={this.handleChange}
-                                    label="Item"
-                                    className={classes.formControl}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={4}>
+                        </Box>
+                        <Box
+                            borderRadius={5}
+                            boxShadow={2}
+                            style={{ width: "100%", backgroundColor: "white" }}
+                            m={2}
+                            p={1}
+                        >
+                            <Typography>
+                                {data.itemList.length
+                                    ? `${data.itemList.length} items selected.`
+                                    : ""}
+                                <br />
+                                You'll be alloted a period within the slot you
+                                choosed.
+                            </Typography>
+                            <br />
+                            <Grid
+                                item
+                                container
+                                direction="row"
+                                justify="center"
+                            >
                                 <Button
+                                    color="primary"
                                     variant="contained"
-                                    color="secondary"
-                                    size="large"
-                                    onClick={handleAddItem}
-                                    className={classes.button}
-                                    startIcon={<AddIcon />}
+                                    onClick={handleBooking}
                                 >
-                                    add
+                                    Confirm Booking
                                 </Button>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Box>
-                                    {data.itemList.map((value, i) => (
-                                        <Chip
-                                            key={i}
-                                            label={value}
-                                            color="secondary"
-                                            onDelete={() => handleDelete(value)}
-                                            className={classes.chip}
-                                        />
-                                    ))}
-                                </Box>
-                            </Grid>
-                        </Grid>
+                        </Box>
+                    </form>
+                ) : this.state.isLoading ? (
+                    <Box m={3}>
+                        <CircularProgress color="primary" />
                     </Box>
-                    <Box
-                        borderRadius={5}
-                        boxShadow={2}
-                        style={{ width: "100%", backgroundColor: "white" }}
-                        m={2}
-                        p={1}
-                    >
-                        <Typography>
-                            {data.itemList.length
-                                ? `${data.itemList.length} items selected.`
-                                : ""}
-                            <br />
-                            You'll be alloted a period within the slot you
-                            choosed.
-                        </Typography>
-                        <br />
-                        <Grid item container direction="row" justify="center">
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                //onClick={handleBooking}
-                            >
-                                Confirm Booking
-                            </Button>
-                        </Grid>
-                    </Box>
-                </form>
+                ) : (
+                    <SuccessNoticeBody
+                        data={this.state.noticeBody}
+                        error={!this.state.success}
+                    />
+                )}
             </Dialog>
         );
     }
 }
 
 export default withStyles(useStyles)(EditBookings);
+
+// arrivalHour: 15;
+// arrivalMinute: 0;
+// arrivalTimeIST: 3;
+// deliveryHour: 15;
+// deliveryMinute: 30;
+// deliveryTimeIST: 3;
+// message: "Booking updated successfully";
+
+class SuccessNoticeBody extends Component {
+    state = {};
+
+    render() {
+        if (this.props.error) {
+            const { message } = this.props.data;
+            return (
+                <Box m={2}>
+                    <Typography
+                        variant="h5"
+                        style={{ margin: 20 }}
+                        color="error"
+                        align="center"
+                    >
+                        <b>{message}</b>
+                    </Typography>
+                </Box>
+            );
+        } else {
+            const {
+                arrivalHour,
+                arrivalMinute,
+                deliveryHour,
+                message,
+                deliveryMinute,
+            } = this.props.data;
+            return (
+                <Box m={2}>
+                    <Typography variant="h5" align="center" gutterBottom>
+                        <img
+                            src="https://www.huayeahfabric.com/wp-content/uploads/2019/06/success.gif"
+                            style={{ height: 150, margin: "auto" }}
+                        />
+                        <br />
+                        Thank you for your order.
+                        <br />
+                        <p style={{ fontSize: 20 }}>
+                            You are alloted the slot <br />
+                            <b style={{ fontSize: 26 }}>
+                                {timeString(arrivalHour, arrivalMinute)} →{" "}
+                                {timeString(deliveryHour, deliveryMinute)}
+                            </b>
+                        </p>
+                    </Typography>
+                    <Typography variant="h6" align="center">
+                        <b>{message}</b>
+                    </Typography>
+                </Box>
+            );
+        }
+    }
+}
