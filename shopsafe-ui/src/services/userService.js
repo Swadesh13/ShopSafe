@@ -53,17 +53,8 @@ export const ShopRegister = (data) => {
         maxConcurrent,
         payment_modes,
         discount,
+        address,
     } = data;
-    const address =
-        data.streetName +
-        ", " +
-        data.cityName +
-        ", " +
-        data.stateName +
-        "-" +
-        data.zipCode +
-        ", " +
-        data.country;
     const userData = {
         shopName,
         ownerName: firstName + " " + lastName,
@@ -108,19 +99,23 @@ export const bookNewSlot = (data, id) => {
         slotName: slotName,
         isShop: false,
         shopId: id,
+        otp: Math.round(Math.random(0, 1) * 777777 + 222222),
         slotGroupBegins: slot.start,
         slotGroupEnds: slot.end,
+        customerName: localStorage.getItem("userName"),
     };
     console.log(body);
     return http.protectedPost(api.bookSlot, body);
 };
 
-export const updateRadius = (r) => {
-    const rad = r * 1000;
-    return http.get(api.shopList, {
-        radius: rad,
-    });
-};
+// export const updateRadius = (r) => {
+//     const rad = r * 1000;
+//     console.log("radius", r);
+//     return http.post(api.shopList, {
+//         userLocation: localStorage.getItem("userAddress"),
+//         radius: rad,
+//     });
+// };
 
 export const updateBookings = (data, id) => {
     return http.protectedPut(api.editBooking + id, {
@@ -131,6 +126,40 @@ export const updateBookings = (data, id) => {
     });
 };
 
+export const userDetails = () => {
+    return http.protectedPost(api.userData, { isShop: false });
+}
+
 export const deleteSlots = (id) => {
     return http.protectedDelete(api.editBooking + id, { isShop: false });
 };
+
+export const giveReview = (rating, shopId, text = "") => {
+    if (text)
+        return http.protectedPost(api.giveRating, {
+            shopId,
+            rating,
+            review: text,
+            isShop: false,
+        });
+    else
+        return http.protectedPost(api.giveRating, {
+            shopId,
+            rating,
+            isShop: false,
+        });
+};
+
+export const getShopDetailsAuthorized = () => {
+    return http.protectedPost(api.shopData, {
+        isShop: true,
+    });
+}
+
+export const validateSlotByOtp = (bookingId, otp) => {
+    console.log("validate", bookingId + "@@##$$" + otp);
+    return http.protectedPost(api.validateSlot, {
+        isShop: true,
+        qrdata: bookingId + "@@##$$" + otp,
+    });
+}

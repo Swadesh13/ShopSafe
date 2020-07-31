@@ -12,7 +12,6 @@ import { deleteSlots } from "../../../services/userService";
 class MyBookings extends Component {
     state = {
         slotData: [],
-        //slotData:getBookedSlotCustomer(),
         showPastSlot: false,
         editDialogue: false,
         isLoading: false,

@@ -10,7 +10,7 @@ import {CustomAppBar,Footer} from "./components/AppComponent";
 import Home from "./components/home";
 import Logout from "./components/pages/shopowner/shopLogout";
 import { withRouter } from "react-router-dom";
-import ShopDashboard from "./components/pages/shopowner/dashBoard";
+import ShopMainPage from './components/pages/shopowner/shopMainPage';
 
 class App extends Component {
     state = {
@@ -19,12 +19,6 @@ class App extends Component {
             //localStorage.getItem("userLogged") && !localStorage.getItem("isShop"),
             shopOwnerLogged: false,
             //localStorage.getItem("userLogged") && localStorage.getItem("isShop"),
-        },
-        data: {
-            imageUrl: "https://picsum.photos/554",
-            userName: "John Doe",
-            address:
-                "1600 Amphitheatre Parkway in Mountain View, California, United States",
         },
         customerMenu: [
             {
@@ -56,6 +50,10 @@ class App extends Component {
             {
                 path: "/shopowner/dashboard",
                 label: "Dashboard",
+            },
+            {
+                path: "/shopowner/bookings",
+                label: "View Bookings",
             },
             {
                 path: "/logout",
@@ -156,14 +154,14 @@ class App extends Component {
                         {shopOwnerLogged && (
                             <Route
                                 path="/shopowner"
-                                component={() => <ShopDashboard />}
+                                component={() => <ShopMainPage />}
                             />
                         )}
                         {customerLogged && (
                             <Route
                                 path="/customer"
                                 component={() => (
-                                    <MainPage userData={this.state.data} />
+                                    <MainPage />
                                 )}
                             />
                         )}

@@ -47,7 +47,8 @@ class CustomAppBarClass extends Component {
     const { HideOnScroll } = this;
     return (
       <HideOnScroll {...this.props}>
-        <AppBar  style={{ flexGrow: 1, background: "#00ff80" }}>
+        {/* <AppBar color="transparent"  style={{ flexGrow: 1,  }} > */}
+        <AppBar style={{ flexGrow: 1, background: "#00ff80" }}>
           <Toolbar>
             <Typography variant="h4" noWrap style={{ flexGrow: 1 }}>
               <b>ShopSafeJU</b>
@@ -153,7 +154,7 @@ class ProfileMenu extends Component {
             vertical: "top",
             horizontal: "right",
           }}
-          open={anchorEl}
+          open={anchorEl ? true : false}
           onClose={handleClose}
         >
           {menuOption.map((option, i) => (

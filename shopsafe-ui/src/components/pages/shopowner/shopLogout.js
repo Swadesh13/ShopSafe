@@ -9,13 +9,11 @@ class Logout extends Component {
         try {
             const response = await logout();
             console.log(response);
-            if (response.status === 200) {
-                localStorage.clear();
-                window.location = "/";
-                //this.props.history.push("/");
-            }
         } catch (ex) {
             console.log(ex);
+        } finally {
+            localStorage.clear();
+            window.location = "/";
         }
     }
     render() { 

@@ -80,6 +80,7 @@ class CurrentLocation extends Component {
         console.log(addr.description);
         this.setState({ location: addr.description, openDialogue: false });
         localStorage.setItem("userAddress", addr.description);
+        this.props.handleAddress();
     };
 
     handleClose = () => {
