@@ -16,7 +16,7 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 
 
 
-class CustomAppBar extends Component {
+class CustomAppBarClass extends Component {
   state = {};
 
   handlePath = (path) => {
@@ -47,7 +47,8 @@ class CustomAppBar extends Component {
     const { HideOnScroll } = this;
     return (
       <HideOnScroll {...this.props}>
-        <AppBar  style={{ flexGrow: 1, background: "#f98b88" }}>
+        {/* <AppBar color="transparent"  style={{ flexGrow: 1,  }} > */}
+        <AppBar style={{ flexGrow: 1, background: "#00ff80" }}>
           <Toolbar>
             <Typography variant="h4" noWrap style={{ flexGrow: 1 }}>
               <b>ShopSafeJU</b>
@@ -84,7 +85,29 @@ class CustomAppBar extends Component {
   }
 }
 
-export default withRouter(CustomAppBar);
+//export default withRouter(CustomAppBar);
+
+class CustomFooter extends Component {
+	state = {  }
+	render() { 
+		return (
+            <footer
+                style={{
+                    backgroundColor: "grey",
+                    position: "fixed",
+                    left: 0,
+                    bottom: 0,
+                    marginTop:'auto',
+                    width: "100%",
+                }}
+            >
+                This is footer
+            </footer>
+        );
+	}
+}
+
+
 
 class ProfileMenu extends Component {
   state = {
@@ -131,7 +154,7 @@ class ProfileMenu extends Component {
             vertical: "top",
             horizontal: "right",
           }}
-          open={anchorEl}
+          open={anchorEl ? true : false}
           onClose={handleClose}
         >
           {menuOption.map((option, i) => (
@@ -144,3 +167,7 @@ class ProfileMenu extends Component {
     );
   }
 }
+
+
+export const CustomAppBar = withRouter(CustomAppBarClass);
+export const Footer = withRouter(CustomFooter);
