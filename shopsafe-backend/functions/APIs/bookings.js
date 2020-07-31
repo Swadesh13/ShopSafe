@@ -1,5 +1,6 @@
 const { db, admin } = require("../util/admin");
 const { validateBooking } = require("../util/validators");
+
 // const config = require("../util/config");
 
 // const firebase = require("firebase");
@@ -16,6 +17,7 @@ exports.getAllBookings = (request, response) => {
       .then((data) => {
         var arrivalTime, deliveryTime, suffix;
         let bookings = [];
+        var customerName;
         data.forEach((doc) => {
           suffix = doc.data().arrivalHour >= 12 ? "PM" : "AM";
           arrivalTime =
@@ -51,11 +53,13 @@ exports.getAllBookings = (request, response) => {
             deliveryHour: doc.data().deliveryHour,
             deliveryMinute: doc.data().deliveryMinute,
             arrivalTimeIST: arrivalTime,
+            customerName: doc.data().customerName,
+            status: doc.data().status,
             deliveryTimeIST: deliveryTime,
             createdAt: doc.data().createdAt,
           });
         });
-        return response.json(bookings);
+        return response.status(200).json(bookings);
       })
       .catch((err) => {
         console.error(err);
@@ -104,11 +108,14 @@ exports.getAllBookings = (request, response) => {
             deliveryHour: doc.data().deliveryHour,
             deliveryMinute: doc.data().deliveryMinute,
             arrivalTimeIST: arrivalTime,
+            otp: doc.data().otp,
+            status: doc.data().status,
+            customerName: doc.data().customerName,
             deliveryTimeIST: deliveryTime,
             createdAt: doc.data().createdAt,
           });
         });
-        return response.json(bookings);
+        return response.status(200).json(bookings);
       })
       .catch((err) => {
         console.error(err);
@@ -278,6 +285,7 @@ exports.createBooking = (request, response) => {
             else finalCreate();
           });
 
+        // create the final object
         function finalCreate() {
           const newBooking = {
             shopId: request.body.shopId,
@@ -289,8 +297,11 @@ exports.createBooking = (request, response) => {
             arrivalHour: request.body.slotGroupBegins,
             arrivalMinute: ArrivalMinute,
             duration: duration,
+            customerName: request.body.customerName,
             deliveryHour: expectedHour,
             deliveryMinute: expectedMinute,
+            otp: request.body.otp,
+            status: 1,
             createdAt: d.toISOString(),
           };
 
@@ -580,6 +591,7 @@ exports.editBooking = (request, response) => {
     });
 };
 
+// Delete a booking on Customer's request
 exports.deleteBooking = (request, response) => {
   const document = db.doc(`/bookings/${request.params.bookingId}`);
   document
@@ -635,4 +647,35 @@ exports.deleteBooking = (request, response) => {
       console.error(err);
       return response.status(500).json({ error: err.code });
     });
+};
+
+// Validate booking when customer initiates transaction at shop
+exports.approveBooking = (request, response) => {
+  if (request.body.isShop) {
+    var requestData = request.body.qrdata.split("@@##$$");
+    var bookingId = requestData[0];
+    var customerOtp = requestData[1];
+
+    db.collection("bookings")
+      .doc(bookingId)
+      .get()
+      .then((doc) => {
+        if (doc.data().otp == customerOtp) {
+          db.doc(`/bookings/${bookingId}`).update({
+            status: 2,
+          });
+          return response
+            .status(200)
+            .json({ message: "Transaction completed successfully" });
+        } else return response.status(400).json({ message: "Incorrect OTP" });
+      })
+      .catch((error) => {
+        console.error(error);
+        return response.status(400).json(error.code);
+      });
+  } else {
+    return response
+      .status(400)
+      .json({ message: "Customer is not allowed to validate booking" });
+  }
 };

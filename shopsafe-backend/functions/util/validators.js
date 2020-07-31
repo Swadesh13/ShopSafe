@@ -44,12 +44,12 @@ exports.validateSignUpShop = (data) => {
 	if (!data.closingHour || !(data.closingHour >= 0 && data.closingHour < 24))
 	errors.closingHour = "Must be between 0 and 24";
 	if (
-	!data.openingMinute ||
+	typeof data.openingMinute == "undefined" ||
 	!(data.openingMinute >= 0 && data.openingMinute < 60)
 	)
 	errors.openingMinute = "Must be between 0 and 60";
 	if (
-	!data.closingMinute ||
+	typeof data.closingMinute == "undefined" ||
 	!(data.closingMinute >= 0 && data.closingMinute < 60)
 	)
 	errors.closingMinute = "Must be between 0 and 60";

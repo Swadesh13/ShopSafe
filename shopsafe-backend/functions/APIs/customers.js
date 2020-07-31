@@ -1,88 +1,11 @@
 const { db, admin } = require("../util/admin");
 const config = require("../util/config");
+const sha256 = require("sha256");
 
 const firebase = require("firebase");
 const { validateSignUpCustomer } = require("../util/validators");
 
 firebase.initializeApp(config);
-
-// exports.handleReset = (request, response) => {
-//   // TODO: Implement getParameterByName()
-
-//   // Get the action to complete.
-//   var mode = getParameterByName("mode");
-//   // Get the one-time code from the query parameter.
-//   var actionCode = getParameterByName("oobCode");
-//   // (Optional) Get the continue URL from the query parameter if available.
-//   var continueUrl = getParameterByName("continueUrl");
-//   // (Optional) Get the language code if available.
-//   var lang = getParameterByName("lang") || "en";
-
-//   // Configure the Firebase SDK.
-//   // This is the minimum configuration required for the API to be used.
-//   var config = {
-//     apiKey: "AIzaSyDhDHBXHlxKoo_ugfqoB_oKQwaGprODDzI", // Copy this key from the web initialization
-//     // snippet found in the Firebase console.
-//   };
-//   // var app = firebase.initializeApp(config);
-//   var auth = app.auth();
-
-//   // Handle the user management action.
-//   switch (mode) {
-//     case "resetPassword":
-//       // Display reset password handler and UI.
-//       handleResetPassword(auth, actionCode, continueUrl, lang);
-//       break;
-//     case "recoverEmail":
-//       // Display email recovery handler and UI.
-//       handleRecoverEmail(auth, actionCode, lang);
-//       break;
-//     case "verifyEmail":
-//       // Display email verification handler and UI.
-//       handleVerifyEmail(auth, actionCode, continueUrl, lang);
-//       break;
-//     default:
-//     // Error: invalid mode.
-//   }
-
-//   function handleResetPassword(auth, actionCode, continueUrl, lang) {
-//     // Localize the UI to the selected language as determined by the lang
-//     // parameter.
-//     var accountEmail;
-//     // Verify the password reset code is valid.
-//     auth
-//       .verifyPasswordResetCode(actionCode)
-//       .then(function (email) {
-//         var accountEmail = email;
-//         console.log("email is : ", accountEmail);
-
-//         // TODO: Show the reset screen with the user's email and ask the user for
-//         // the new password.
-
-//         // Save the new password.
-//         auth
-//           .confirmPasswordReset(actionCode, newPassword)
-//           .then(function (resp) {
-//             console.log("password reset done");
-//             // Password reset has been confirmed and new password updated.
-//             // TODO: Display a link back to the app, or sign-in the user directly
-//             // if the page belongs to the same domain as the app:
-//             // auth.signInWithEmailAndPassword(accountEmail, newPassword);
-//             // TODO: If a continue URL is available, display a button which on
-//             // click redirects the user back to the app via continueUrl with
-//             // additional state determined from that URL's parameters.
-//           })
-//           .catch(function (error) {
-//             // Error occurred during confirmation. The code might have expired or the
-//             // password is too weak.
-//           });
-//       })
-//       .catch(function (error) {
-//         // Invalid or expired action code. Ask user to try to reset the password
-//         // again.
-//       });
-//   }
-// };
 
 // Signup
 exports.signUpUser = (request, response) => {
@@ -291,8 +214,8 @@ exports.uploadProfilePhoto = (request, response) => {
 //       });
 //       data.forEach((doc) => {
 //         var distance = require("google-distance");
-//         // distance.apiKey = "AIzaSyBixtvcF5A38Z2dVP9fFkcvLf5P59RmnEA";
-//         distance.apiKey = "AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk";
+//         distance.apiKey = "AIzaSyBixtvcF5A38Z2dVP9fFkcvLf5P59RmnEA";
+//         // distance.apiKey = "AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk";
 //         destination = doc.data().address;
 //         originvalue = request.body.userLocation;
 //         distance.get(
@@ -356,6 +279,8 @@ exports.uploadProfilePhoto = (request, response) => {
 //             // if all shops are iterated over, then return the final shop list
 //             if (count == i && shops.length > 0)
 //               return response.status(200).json(shops);
+//             else if (count == i && shops.length == 0)
+//               return response.status(400).json({ message: "No shops found" });
 //             // else
 //             //   return response
 //             //     .status(400)
@@ -502,18 +427,9 @@ exports.checkapi = (request, response) => {
       console.log(data);
     }
   );
+};
 
-  // requests(url, function (error, response, body) {
-  //   var metrics = [];
-  //   // console.error("error:", error); // Print the error if one occurred
-  //   // console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
-  //   metrics.push({
-  //     travelRadius: JSON.parse(body).rows[0].elements[0].distance.value,
-  //     travelTime: JSON.parse(body).rows[0].elements[0].duration.value,
-  //     travelTimeText: JSON.parse(body).rows[0].elements[0].duration.text,
-  //     travelRadiusText: JSON.parse(body).rows[0].elements[0].distance.text,
-  //   });
-
-  //   console.log(metrics);
-  // });
+exports.encryptdata = (request, response) => {
+  var hash = sha256(request.body.data);
+  return response.status(200).json({ hashValue: hash });
 };

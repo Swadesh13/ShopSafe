@@ -3,8 +3,6 @@ const config = require("../util/config");
 
 const firebase = require("firebase");
 module.exports = (request, response, next) => {
-  // var user = firebase.auth().currentUser;
-  // if (user) {
   let idToken;
   if (
     request.headers.authorization &&
@@ -28,15 +26,11 @@ module.exports = (request, response, next) => {
       if (request.url == "/logout") return next();
       request.user = decodedToken;
       request.user.isShop = request.body.isShop;
-      // if (request.url.startsWith("/shop") && request.body.isShop == false)
-      //   return response
-      //     .status(400)
-      //     .json({ message: "Customer is not allowed to access this route" });
       if (request.url == "/shops" && request.body.isShop == true)
         return response
           .status(400)
           .json({ message: "Shops are not allowed to access this route" });
-      if (request.url.startsWith("/booking") && request.body.isShop == true) {
+      if (request.url.startsWith("/booking/") && request.body.isShop == true) {
         return response.status(400).json({
           message: "Shops are not allowed to create / edit / delete booking",
         });
@@ -47,9 +41,4 @@ module.exports = (request, response, next) => {
       console.error("Error while verifying token", err);
       return response.status(403).json(err);
     });
-  // } else {
-  //   return response
-  //     .status(400)
-  //     .json({ message: "User should be signed in to perform actions" });
-  // }
 };
