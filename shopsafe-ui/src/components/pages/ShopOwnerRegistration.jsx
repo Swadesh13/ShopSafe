@@ -12,7 +12,11 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
+import SearchIcon from "@material-ui/icons/Search";
+import Paper from "@material-ui/core/Paper";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -53,6 +57,23 @@ const useStyles = (theme) => ({
     chip: {
         margin: 2,
     },
+    root: {
+        padding: "2px 4px",
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
+    },
+    input: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
+    },
+    iconButton: {
+        padding: 10,
+    },
+    divider: {
+        height: 28,
+        margin: 4,
+    },
 });
 
 class ShopOwnerRegistration extends Component {
@@ -63,11 +84,7 @@ class ShopOwnerRegistration extends Component {
             shopName: "",
             email: "",
             phoneNumber: "",
-            streetName: "",
-            cityName: "",
-            zipCode: "",
-            country: "India",
-            stateName: "",
+            address:"",
             password: "",
             confirmPassword: "",
             openingHour: 0,
@@ -106,11 +123,11 @@ class ShopOwnerRegistration extends Component {
         this.setState({ data });
     };
 
-    handleState = ({ target: { name, value } }) => {
+    updateLocation = (addr) => {
         let data = { ...this.state.data };
-        data[name] = value;
-        data.cityName = "";
+        data["address"] = addr.description;
         this.setState({ data });
+        localStorage.setItem("userAddress", addr.description);
     };
 
     handleMultipleSelect = (event) => {};
@@ -128,9 +145,13 @@ class ShopOwnerRegistration extends Component {
             window.location = "/";
         } catch (ex) {
             if (ex.response) {
-                const error = { ...ex.response.data };
+                if (ex.response.status == 500) {
+                    alert(ex.response.data);
+                } else {
+                    const error = { ...ex.response.data };
+                    this.setState({ error });
+                }
                 console.log("error", ex.response);
-                this.setState({ error });
             }
         }
     };
@@ -265,100 +286,22 @@ class ShopOwnerRegistration extends Component {
                             Address
                         </Typography>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={4}>
-                                <FormControl
-                                    variant="filled"
-                                    fullWidth
-                                    className={classes.formControl}
+                            <Grid item xs={12}>
+                                <Paper
+                                    component="form"
+                                    className={classes.root}
                                 >
-                                    <InputLabel id="demo-simple-select-filled-label">
-                                        State
-                                    </InputLabel>
-                                    <Select
-                                        name="stateName"
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={this.state.data.stateName}
-                                        onChange={this.handleState}
+                                    <IconButton
+                                        type="submit"
+                                        className={classes.iconButton}
+                                        aria-label="search"
                                     >
-                                        <MenuItem value="">
-                                            <em>Choose...</em>
-                                        </MenuItem>
-                                        {statesList.map((state, i) => (
-                                            <MenuItem key={i} value={state}>
-                                                {state}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <FormControl
-                                    variant="filled"
-                                    fullWidth
-                                    className={classes.formControl}
-                                >
-                                    <InputLabel id="demo-simple-select-filled-label">
-                                        City
-                                    </InputLabel>
-                                    <Select
-                                        name="cityName"
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={this.state.data.cityName}
-                                        onChange={this.handleSelect}
-                                    >
-                                        <MenuItem value="">
-                                            <em>Choose...</em>
-                                        </MenuItem>
-                                        {getStateWiseCity(
-                                            this.state.data.stateName
-                                        ).map((city, i) => (
-                                            <MenuItem key={i} value={city}>
-                                                {city}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    variant="filled"
-                                    required
-                                    fullWidth
-                                    id="country"
-                                    label="Country"
-                                    name="country"
-                                    defaultValue="India"
-                                    //onChange={this.handleChange}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="filled"
-                                    required
-                                    fullWidth
-                                    id="zipCode"
-                                    label="Zip Code"
-                                    name="zipCode"
-                                    onChange={this.handleChange}
-                                    error={error && error.address}
-                                    helperText={error && error.address}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="filled"
-                                    required
-                                    fullWidth
-                                    id="streetName"
-                                    label="Street Name"
-                                    name="streetName"
-                                    onChange={this.handleChange}
-                                />
+                                        <SearchIcon />
+                                    </IconButton>
+                                    <GooglePlacesAutocomplete
+                                        onSelect={this.updateLocation}
+                                    />
+                                </Paper>
                             </Grid>
                         </Grid>
                     </Box>

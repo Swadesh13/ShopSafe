@@ -217,7 +217,7 @@ class Order extends Component {
         return (
             <Grid container spacing={2} style={{ paddingTop: 15 }}>
                 <form style={{ width: "100%" }}>
-                    <CurrentLocation />
+                    {/* <CurrentLocation /> */}
                     <br />
                     <Box
                         borderRadius={5}

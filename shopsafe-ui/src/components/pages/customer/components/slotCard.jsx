@@ -146,10 +146,11 @@ class SlotCard extends Component {
                 )}
                 <Grid justify="center">
                     <QRCode
-                        value={data.bookingId}
+                        value={data.bookingId+"@@##$$"+data.otp}
                         style={{ margin: "auto" }}
                         className={classes.media}
                     />
+                    <Typography variant="body1" align="center" style={{margin:10}}><b>OTP: {data.otp}</b></Typography>
                 </Grid>
 
                 <CardContent>

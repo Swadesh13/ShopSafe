@@ -119,10 +119,12 @@ class SignIn extends Component {
             );
         } catch (ex) {
             console.log(ex);
-            const errors = { ...ex.response.data };
-            console.log("error", ex.response);
-            this.setState({ errors });
-            if (ex.response.data.general) alert(ex.response.data.general);
+            if (ex.response.data.message) alert(ex.response.data.message);
+            else {
+                const errors = { ...ex.response.data };
+                console.log("error", ex.response);
+                this.setState({ errors });
+            }
         }
         console.log("Submitted", this.state.data);
     };

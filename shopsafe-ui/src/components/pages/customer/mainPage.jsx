@@ -1,18 +1,5 @@
 import React, { Component } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import MenuIcon from "@material-ui/icons/Menu";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import DashboardIcon from "@material-ui/icons/Dashboard";
@@ -21,13 +8,13 @@ import BookmarksRoundedIcon from "@material-ui/icons/BookmarksRounded";
 import PowerSettingsNewRoundedIcon from "@material-ui/icons/PowerSettingsNewRounded";
 
 import Shops from "./shops";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import BookNewSlot from "./bookSlot/BookSlot";
-import SignIn from "../../pages/signin";
 import MyBookings from "./myBookings";
 import MyProfile from "./profile";
 import Logout from "./Logout";
 import ShopPage from "./shopPage/shopPage";
+import { userDetails } from "../../../services/userService";
 
 const drawerWidth = 240;
 
@@ -98,6 +85,17 @@ class MainPage extends Component {
         ],
     };
 
+    async componentDidMount() {
+        try {
+            const response = await userDetails();
+            const { firstName, lastName } = response.data.userCredentials;
+            localStorage.setItem("userName", firstName + " " + lastName);
+            console.log(response);
+        } catch (ex) {
+            console.log(ex.response)
+        }
+    }
+
     handleClick = (path) => {
         this.props.history.push(path);
     };
@@ -116,9 +114,7 @@ class MainPage extends Component {
                     <Switch>
                         <Route
                             path="/customer/profile"
-                            component={() => (
-                                <MyProfile userData={this.props.userData} />
-                            )}
+                            component={() => <MyProfile />}
                         />
                         <Route
                             path="/customer/dashboard"
@@ -138,7 +134,7 @@ class MainPage extends Component {
                             component={ShopPage}
                         />
                         <Route path="/" component={() => <Shops />} />
-                        {/* <Route path="/" component={ShopPage} /> */}
+                        {/* <Route path="/" component={MyProfile} /> */}
                     </Switch>
                 </main>
             </div>

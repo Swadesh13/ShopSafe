@@ -16,9 +16,10 @@ Axios.interceptors.response.use(null, (error) => {
     return Promise.reject(error);
 });
 
-const protectedGet = (api) => {
+const protectedGet = (api, params) => {
     const jwt = token();
     const response = Axios.get(api, {
+        params,
         headers: {
             Authorization: `Bearer ${jwt}`,
         },

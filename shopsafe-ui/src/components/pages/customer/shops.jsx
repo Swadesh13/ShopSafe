@@ -43,9 +43,13 @@ class Shops extends Component {
     };
 
     async componentDidMount() {
+        this.updateShopList();
+    }
+
+    updateShopList = async () => {
         this.setState({ isLoading: true });
         try {
-            const response = await getShopList();
+            const response = await getShopList(this.state.distance);
             console.log(response);
             if (response.data)
                 this.setState({ shopData: response.data, message: "" });
@@ -53,7 +57,7 @@ class Shops extends Component {
         } catch (ex) {
             if (ex.response)
                 this.setState({
-                    message: ex.response.data.message || "An Error Occured",
+                    message: ex.response.data ? ex.response.data.message : "An Error Occured",
                 });
             else this.setState({ message: "An Error Occured" });
             console.log(ex.response);
@@ -61,23 +65,15 @@ class Shops extends Component {
         this.setState({ isLoading: false });
     }
 
-    handleChange = async (event, newValue) => {
-        this.setState({ isLoading: true });
+    handleChange = (event, newValue) => {
         const distance = newValue;
-        try {
-            const response = await updateRadius(distance);
-            this.setState({
-                distance,
-                shopData: response.data,
-                message: "",
-            });
-            console.log(response);
-        } catch (ex) {
-            this.setState({ message: ex.response.data.message });
-            console.log(ex.response);
-        }
-        this.setState({ isLoading: false });
+        this.setState({ distance });
+        this.updateShopList();
     };
+
+    handleAddress = () => {
+        this.updateShopList();
+    }
 
     render() {
         const { classes } = this.props;
@@ -151,7 +147,7 @@ class Shops extends Component {
                         style={{ width: "100%" }}
                     >
                         <Grid container xs={12} direction="row">
-                            <CurrentLocation />
+                            <CurrentLocation handleAddress={this.handleAddress}/>
                         </Grid>
                         {this.state.isLoading ? (
                             <Grid
