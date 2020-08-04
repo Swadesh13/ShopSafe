@@ -34,10 +34,10 @@ class FilterCard extends Component {
     state = {
         filter: {
             openClose: { showAll: true, isOpen: false },
-            distanceRating: {
-                //distance: { selected: true, ascOrder: true },
-                //rating: { selected: false, ascOrder: true },
-            },
+            // distanceRating: {
+            //     //distance: { selected: true, ascOrder: true },
+            //     //rating: { selected: false, ascOrder: true },
+            // },
             items: [],
             slotTypes: { Morning: true, Afternoon: true, Evening: true },
             customerRatings:{"4":false,"3":false},
@@ -56,6 +56,7 @@ class FilterCard extends Component {
         filter.openClose[event.target.name] = event.target.checked;
         this.setState({ filter });
         console.log(event.target.checked, this.state.filter);
+        this.props.updateFilter(this.state.filter);
     };
 
     handleDR = (name) => {
@@ -68,24 +69,28 @@ class FilterCard extends Component {
                 [name]: { ascOrder: true },
             };
         this.setState({ filter });
+        this.props.updateFilter(this.state.filter);
     };
 
     handleSelect = ({ target: { name, value } }) => {
         let filter = { ...this.state.filter };
         filter[name] = value;
         this.setState({ filter });
+        this.props.updateFilter(this.state.filter);
     };
 
     handleSlot = event => {
         let filter = { ...this.state.filter };
         filter.slotTypes[event.target.name] = event.target.checked;
         this.setState({ filter });
+        this.props.updateFilter(this.state.filter);
     }
     
     handleRating = event => {
         let filter = { ...this.state.filter };
         filter.customerRatings[event.target.name] = event.target.checked;
         this.setState({ filter });
+        this.props.updateFilter(this.state.filter);
     }
 
     render() {

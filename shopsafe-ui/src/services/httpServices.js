@@ -48,6 +48,17 @@ const protectedPost = (api, body) => {
     return response;
 };
 
+// const upload = (api, file) => {
+//     const jwt = token();
+//     const response = Axios.post(api, body, {
+//         headers: {
+//             'Authorization': `Bearer ${jwt}`,
+//         },
+//     });
+//     return response;
+// };
+
+
 const protectedPut = (api, body) => {
     const jwt = token();
     const response = Axios.put(api, body, {

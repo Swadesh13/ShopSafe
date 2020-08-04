@@ -154,6 +154,10 @@ export const getShopDetailsAuthorized = () => {
     return http.protectedPost(api.shopData, {
         isShop: true,
     });
+};
+
+export const uploadPhoto = file => {
+    return http.protectedPost(api.uploadProfilePhoto, file);
 }
 
 export const validateSlotByOtp = (bookingId, otp) => {

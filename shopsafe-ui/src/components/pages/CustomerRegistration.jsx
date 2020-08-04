@@ -112,7 +112,7 @@ class CustomerRegistration extends Component {
     };
 
     handleSignin = () => {
-        this.props.onSuccess("/signin");
+        this.props.onSuccess();
     };
 
     render() {

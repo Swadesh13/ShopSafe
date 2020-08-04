@@ -11,6 +11,8 @@
   "shopData": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shop",
   "bookSlot": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/booking",
   "reviews": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/reviews",
+  "errorPageImage": "https://storage.googleapis.com/shopsafe-ju/error.jpg",
+  "uploadProfilePhoto": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/uploadProfilePhoto",
   "validateSlot": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/validate"
   
 }

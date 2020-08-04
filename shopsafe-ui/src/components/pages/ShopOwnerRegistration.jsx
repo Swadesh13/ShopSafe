@@ -168,14 +168,13 @@ class ShopOwnerRegistration extends Component {
     };
 
     handleSignin = () => {
-        this.props.onSuccess("/signin");
+        this.props.onSuccess();
     };
 
     render() {
         console.log(this.state.data);
 
         const { classes } = this.props;
-        const { states: statesList, cityList } = this.formData;
         const { error } = this.state;
         return (
             <form
