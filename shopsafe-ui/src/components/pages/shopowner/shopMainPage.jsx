@@ -3,7 +3,6 @@ import ShopDashboard from "./dashBoard";
 import Logout from "./shopLogout";
 import { Route, Switch } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { getShopBookings } from "../../../services/dataServices";
 import ViewBookings from './viewBookings';
 import ShopProfile from './ShopProfile';
 
@@ -43,8 +42,12 @@ class ShopMainPage extends Component {
                         <Route path="/shopowner/logout/" component={Logout} />
                         <Route
                             path="/shopowner"
-                            component={() => <ShopDashboard />}
+                            component={() => <ShopProfile />}
                         />
+                        {/* <Route
+                            path="/shopowner"
+                            component={() => <ShopDashboard />}
+                        /> */}
                     </Switch>
                 )}
             </main>

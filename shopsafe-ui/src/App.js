@@ -11,6 +11,7 @@ import Home from "./components/home";
 import Logout from "./components/pages/shopowner/shopLogout";
 import { withRouter } from "react-router-dom";
 import ShopMainPage from './components/pages/shopowner/shopMainPage';
+import NotFound from './components/notFound';
 
 class App extends Component {
     state = {
@@ -126,24 +127,25 @@ class App extends Component {
             (shopOwnerLogged || customerLogged) &&
             (customerLogged ? customerMenu : shopOwnerMenu);
         return (
-            <div style={{ flexGrow: 1, backgroundColor:'#ffffff' }}>
+            <div style={{ flexGrow: 1, backgroundColor: "#ffffff" }}>
                 <CustomAppBar
                     menuOption={menuOption}
                     auth={shopOwnerLogged || customerLogged}
+                    handleAuth={this.handleAuth}
                 />
                 <Grid
                     container
                     direction="row"
                     justify="center"
-                    style={{ marginTop: 20, width: "100%", margin: "auto", }}
+                    style={{ marginTop: 20, width: "100%", margin: "auto" }}
                 >
                     <Switch>
-                        <Route
+                        {/* <Route
                             path="/signin"
                             component={() => (
                                 <SignIn handleAuth={this.handleAuth} />
                             )}
-                        />
+                        /> */}
                         <Route path="/logout" component={() => <Logout />} />
                         <Route
                             path="/signup"
@@ -160,17 +162,15 @@ class App extends Component {
                         {customerLogged && (
                             <Route
                                 path="/customer"
-                                component={() => (
-                                    <MainPage />
-                                )}
+                                component={() => <MainPage />}
                             />
                         )}
+                        <Route path="/404" component={NotFound} />
                         <Route path="/" exact component={Home} />
+                        <Redirect to="/404"></Redirect>
                     </Switch>
                 </Grid>
-                <Footer
-                    
-                />
+                <Footer />
             </div>
         );
     }

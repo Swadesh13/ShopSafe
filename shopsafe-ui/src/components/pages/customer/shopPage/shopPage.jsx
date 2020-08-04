@@ -336,7 +336,7 @@ class ShopPage extends Component {
                                                 item
                                                 style={{ width: "100%" }}
                                             >
-                                                    <GiveReview id={this.state.data.shopId}/>
+                                                <GiveReview id={this.state.data.shopId}/>
                                             </Grid>
                                         </Grid>
                                     </Grid>

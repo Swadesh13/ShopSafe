@@ -3,7 +3,7 @@ import { Grid, Button, Box } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import { userDetails } from "../../../services/userService";
+import { userDetails, uploadPhoto } from "../../../services/userService";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import EmailIcon from "@material-ui/icons/Email";
 import PhoneIcon from "@material-ui/icons/Phone";
@@ -13,8 +13,7 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
-
-
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 
 const useStyles = (theme) => ({
     largeAvatar: {
@@ -23,11 +22,20 @@ const useStyles = (theme) => ({
         margin: "auto",
     },
 });
+
+function buildFileSelector() {
+    const fileSelector = document.createElement("input");
+    fileSelector.setAttribute("type", "file");
+    fileSelector.setAttribute("multiple", "multiple");
+    return fileSelector;
+}
+
 class MyProfile extends Component {
     state = {
         userData: {},
         isLoading: false,
         edit: false,
+        selectedFile: null,
     };
 
     async componentDidMount() {
@@ -40,6 +48,8 @@ class MyProfile extends Component {
             console.log(ex.response);
         }
         this.setState({ isLoading: false });
+        this.fileSelector = buildFileSelector();
+        this.fileSelector.setAttribute("onchange", this.updateFile);
     }
 
     getTime = (t) => {
@@ -55,6 +65,35 @@ class MyProfile extends Component {
         this.setState({ edit: false });
     };
 
+    handleFile = () => {
+        this.fileSelector.click();
+        console.log("hello", this.fileSelector);
+        console.log(this.state.selectedFile);
+    };
+
+    uploadFile = async () => {
+        const formData = new FormData();
+        formData.append(
+            "Image",
+            this.state.selectedFile,
+            this.state.selectedFile.name
+        );
+        try {
+            const response = await uploadPhoto(formData);
+            console.log(response);
+        } catch (ex) {
+            console.log(ex.response);
+        } finally {
+            this.setState({ selectedFile: null });
+        }
+    };
+
+    updateFile = (event) => {
+        this.setState({ selectedFile: event.target.files[0] });
+        console.log(this.state.selectedFile, event.target.files);
+        // this.uploadFile();
+    };
+
     // address: "undefined, Durgapur, West Bengal [WB], India";
     // createdAt: "2020-07-17T06:34:53.036Z";
     // email: "skshahnawaz2909@gmail.com";
@@ -68,6 +107,7 @@ class MyProfile extends Component {
     render() {
         const { classes } = this.props;
         const { userData } = this.state;
+        console.log("hello", this.fileSelector);
         return (
             <Grid container justify="center" spacing={5}>
                 {this.state.isLoading ? (
@@ -77,8 +117,16 @@ class MyProfile extends Component {
                 ) : (
                     <React.Fragment>
                         {" "}
-                        <Grid item xs={12}>
-                            <div style={{ padding: 10 }}>
+                        <Grid
+                            item
+                            container
+                            direction="column"
+                            alignItems="center"
+                            xs={12}
+                            spacing={2}
+                        >
+                            {/* //<div style={{ padding: 10 }}> */}
+                            <Grid item>
                                 <Avatar
                                     src={
                                         userData.imageUrl ||
@@ -86,7 +134,43 @@ class MyProfile extends Component {
                                     }
                                     className={classes.largeAvatar}
                                 />
-                                <br />
+                            </Grid>
+                            <Grid item>
+                                {" "}
+                                {this.state.selectedFile ? (
+                                    <React.Fragment>
+                                        <Typography variant="body1">
+                                            {this.state.selectedFile.name}
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            onClick={this.uploadFile}
+                                            color="primary"
+                                        >
+                                            upload
+                                        </Button>
+                                    </React.Fragment>
+                                ) : (
+                                    <React.Fragment>
+                                        <label
+                                            htmlFor="uploadFile"
+                                            style={{ cursor: "pointer" }}
+                                        >
+                                            <AddAPhotoIcon fontSize="large" />
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="uploadFile"
+                                            multiple="multiple"
+                                            onChange={this.updateFile}
+                                            style={{ display: "none" }}
+                                        />
+                                    </React.Fragment>
+                                )}
+                            </Grid>
+
+                            <br />
+                            <Grid item>
                                 <Typography
                                     variant="h3"
                                     component="h3"
@@ -96,7 +180,9 @@ class MyProfile extends Component {
                                         " " +
                                         userData.lastName}
                                 </Typography>
-                            </div>
+                            </Grid>
+
+                            {/* </div> */}
                         </Grid>
                         <Grid xs={12} item>
                             <Typography variant="h6" align="center">
@@ -178,8 +264,8 @@ class MyProfile extends Component {
                         </Grid>
                         <EditForm
                             open={this.state.edit}
-                                handleClose={this.handleClose}
-                                data={userData}
+                            handleClose={this.handleClose}
+                            data={userData}
                         />
                     </React.Fragment>
                 )}

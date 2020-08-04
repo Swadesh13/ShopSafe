@@ -25,6 +25,13 @@ class SimpleStatCard extends Component {
         UpcomingCustomer:this.props.data.filter(c => c.status == 1).length,
     };
 
+    // componentDidMount() {
+    //     const CustomerServedToday = this.props.data.filter((c) => {
+    //         const d = new Date(c.createdAt);
+    //         const currentTime = new Date();
+    //         c.status == 2;
+    //     }).length;
+    // }
 
     render() {
         const { shopData } = this.state;

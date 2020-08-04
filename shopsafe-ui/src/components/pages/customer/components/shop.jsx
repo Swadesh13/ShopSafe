@@ -87,11 +87,6 @@ class Shop extends Component {
         closingTime.setHours(closingHour);
         closingTime.setMinutes(closingTime);
 
-        // return (
-        //   ISTTime.getTime() > openingTime.getTime() &&
-        //   ISTTime.getTime() < closingTime.getTime()
-        // );
-
         const currentTime =
             ISTTime.getHours() * 3600 + ISTTime.getMinutes() * 60;
 
@@ -110,7 +105,6 @@ class Shop extends Component {
     };
 
     render() {
-        console.log("Shop Card", this.props.data);
         this.state.imWidth = window.innerWidth < 800 ? "90%" : "100%";
         const { classes, theme } = this.props;
         const {

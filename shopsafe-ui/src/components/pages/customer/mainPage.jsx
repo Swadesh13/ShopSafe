@@ -9,7 +9,6 @@ import PowerSettingsNewRoundedIcon from "@material-ui/icons/PowerSettingsNewRoun
 
 import Shops from "./shops";
 import { Route, Switch } from "react-router-dom";
-import BookNewSlot from "./bookSlot/BookSlot";
 import MyBookings from "./myBookings";
 import MyProfile from "./profile";
 import Logout from "./Logout";
@@ -92,6 +91,7 @@ class MainPage extends Component {
             localStorage.setItem("userName", firstName + " " + lastName);
             console.log(response);
         } catch (ex) {
+            if (ex.response.status == 403) alert("Your Token has expired. Please re Sign In.");
             console.log(ex.response)
         }
     }
@@ -121,10 +121,6 @@ class MainPage extends Component {
                             component={() => <Shops />}
                         />
                         <Route
-                            path="/customer/booknewslot/:uid"
-                            component={BookNewSlot}
-                        />
-                        <Route
                             path="/customer/booking/"
                             component={MyBookings}
                         />
@@ -133,7 +129,7 @@ class MainPage extends Component {
                             path="/customer/shop/:shopId?"
                             component={ShopPage}
                         />
-                        <Route path="/" component={() => <Shops />} />
+                        <Route path="/customer" component={() => <Shops />} />
                         {/* <Route path="/" component={MyProfile} /> */}
                     </Switch>
                 </main>

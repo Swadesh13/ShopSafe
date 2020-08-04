@@ -12,14 +12,14 @@ import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
 import { login } from "../../services/userService";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { withRouter } from "react-router-dom";
 
 const Joi = require("@hapi/joi");
 
 const useStyles = (theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        margin: theme.spacing(1),
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -49,6 +49,7 @@ class SignIn extends Component {
             password: Joi.string().label("Password").required(),
         },
         checked: true,
+        isLoading: false,
     };
 
     validateProperty = ({ name, value }) => {
@@ -88,20 +89,29 @@ class SignIn extends Component {
     };
 
     handleSubmit = (e) => {
+        this.setState({ isLoading: true });
+        this.forceUpdate();
         e.preventDefault();
         console.log(this.state);
         const errors = this.validate();
         this.setState({ errors: errors ? errors : {} });
         console.log(errors);
-        if (errors) return;
+        if (errors) {
+            return;
+            this.setState({ isLoading: false });
+        }
+        console.log("load", this.state.isLoading);
         this.doSubmit();
     };
 
     handleSignup = () => {
         this.props.history.push("/signup");
+        this.props.handleClose();
     };
 
     doSubmit = async () => {
+        console.log("load", this.state.isLoading);
+
         try {
             const response = await login(
                 this.state.data.email,
@@ -126,7 +136,10 @@ class SignIn extends Component {
                 this.setState({ errors });
             }
         }
+        this.setState({ isLoading: false });
+        this.forceUpdate();
         console.log("Submitted", this.state.data);
+        console.log("load", this.state.isLoading);
     };
 
     render() {
@@ -137,45 +150,53 @@ class SignIn extends Component {
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <form className={classes.form} onSubmit={this.handleSubmit}>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            id="email"
-                            type="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            onChange={this.handleChange}
-                            error={errors && errors.email}
-                            helperText={errors && errors.email && errors.email}
-                        />
+                {this.isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <div className={classes.paper}>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <form
+                            className={classes.form}
+                            onSubmit={this.handleSubmit}
+                        >
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                fullWidth
+                                id="email"
+                                type="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                                onChange={this.handleChange}
+                                error={errors && errors.email}
+                                helperText={
+                                    errors && errors.email && errors.email
+                                }
+                            />
 
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            onChange={this.handleChange}
-                            autoComplete="current-password"
-                            error={errors && errors.password}
-                            helperText={
-                                errors && errors.password && errors.password
-                            }
-                        />
-                        {/* <FormControlLabel
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                onChange={this.handleChange}
+                                autoComplete="current-password"
+                                error={errors && errors.password}
+                                helperText={
+                                    errors && errors.password && errors.password
+                                }
+                            />
+                            {/* <FormControlLabel
               control={
                 <Switch
                   checked={true}
@@ -186,33 +207,34 @@ class SignIn extends Component {
               }
               label="Primary"
             /> */}
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            Sign In
-                        </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                            >
+                                Sign In
+                            </Button>
+                            <Grid container>
+                                <Grid item xs>
+                                    <Link href="#" variant="body2">
+                                        Forgot password?
+                                    </Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link
+                                        onClick={this.handleSignup}
+                                        variant="body2"
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Link
-                                    onClick={this.handleSignup}
-                                    variant="body2"
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </form>
-                </div>
+                        </form>
+                    </div>
+                )}
             </Container>
         );
     }
