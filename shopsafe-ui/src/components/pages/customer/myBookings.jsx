@@ -77,7 +77,7 @@ class MyBookings extends Component {
         console.log("render the slots",this.state.slotData);
         const { slotData: data } = this.state;
         return (
-            <Grid container spacing={2} justify="center">
+            <Grid container spacing={2} justify="flex-start">
                 {this.state.isLoading ? (
                     <Grid item>
                         <CircularProgress />

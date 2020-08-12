@@ -3,7 +3,11 @@ import { Grid, Button, Box } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import { userDetails, uploadPhoto } from "../../../services/userService";
+import {
+    userDetails,
+    uploadPhoto,
+    updateCustomerDetails,
+} from "../../../services/userService";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import EmailIcon from "@material-ui/icons/Email";
 import PhoneIcon from "@material-ui/icons/Phone";
@@ -81,6 +85,11 @@ class MyProfile extends Component {
         try {
             const response = await uploadPhoto(formData);
             console.log(response);
+            const url = URL.createObjectURL(this.state.selectedFile);
+            let userData = { ...this.state.userData };
+            userData.imageUrl = url;
+            this.setState({ userData });
+            this.forceUpdate();
         } catch (ex) {
             console.log(ex.response);
         } finally {
@@ -284,6 +293,7 @@ class EditForm extends Component {
             phoneNumber: this.props.data.phoneNumber,
             address: this.props.data.address,
         },
+        shouldAwait: false,
     };
 
     handleChange = ({ currentTarget: input }) => {
@@ -301,7 +311,22 @@ class EditForm extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         console.log("Registered", this.state);
+        this.doSubmit();
+    };
+
+    doSubmit = async () => {
+        this.setState({ shouldAwait: true });
+        try {
+            const response = await updateCustomerDetails(this.state.data);
+            console.log(response);
+            this.setState({ shouldAwait: false });
+            alert(response.data.message);
+        } catch (ex) {
+            // alert("Cann't Update. ");
+            console.log(ex.response);
+        }
         this.props.handleClose();
+        this.setState({ shouldAwait: false });
     };
 
     updateLocation = (addr) => {
@@ -418,6 +443,7 @@ class EditForm extends Component {
                         <Button
                             type="submit"
                             fullWidth
+                            disabled={this.state.shouldAwait}
                             variant="contained"
                             color="primary"
                             style={{ marginTop: 15 }}

@@ -51,7 +51,7 @@ class ShopDashboard extends Component {
                                 <TodayChart data={this.state.bookingsData} />
                             </Grid>
                             <Grid item sm={8} md={8} lg={8} xl={8}>
-                                <ApexLineChart shopData={this.state.shopData} />
+                                <ApexLineChart shopData={this.state.shopData} data={this.state.bookingsData} />
                             </Grid>
                             <Grid item sm={4} md={4} lg={4} xl={4}>
                                 <SimpleStatCard

@@ -133,12 +133,12 @@ class App extends Component {
                     auth={shopOwnerLogged || customerLogged}
                     handleAuth={this.handleAuth}
                 />
-                <Grid
+                {/* <Grid
                     container
                     direction="row"
                     justify="center"
                     style={{ marginTop: 20, width: "100%", margin: "auto" }}
-                >
+                > */}
                     <Switch>
                         {/* <Route
                             path="/signin"
@@ -169,7 +169,7 @@ class App extends Component {
                         <Route path="/" exact component={Home} />
                         <Redirect to="/404"></Redirect>
                     </Switch>
-                </Grid>
+                {/* </Grid> */}
                 <Footer />
             </div>
         );

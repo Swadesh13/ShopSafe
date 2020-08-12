@@ -123,8 +123,8 @@ class Shop extends Component {
         const distance = distancemetric || -1;
         const imgUrl =
             imageUrl ||
-            "https://img.freepik.com/free-photo/two-beautiful-women-shopping-town_1303-16426.jpg?size=626&ext=jpg";
-        // "https://picsum.photos/" + Math.round(Math.random(0, 1) * 1000);
+            "https://picsum.photos/500/500";
+        //const imgUrl ="https://img.etimg.com/thumb/width-640,height-480,imgsize-789754,resizemode-1,msid-73320353/small-biz/sme-sector/the-kirana-is-a-technology-shop-too/kirana-bccl.jpg";
         //const { openingTime, closingTime } = shopSchedule;
         return (
             <Grid item>

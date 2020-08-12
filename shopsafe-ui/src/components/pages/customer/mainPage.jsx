@@ -91,7 +91,7 @@ class MainPage extends Component {
             localStorage.setItem("userName", firstName + " " + lastName);
             console.log(response);
         } catch (ex) {
-            if (ex.response.status == 403) alert("Your Token has expired. Please re Sign In.");
+            if (ex.response && ex.response.status == 403) alert("Your Token has expired. Please re Sign In.");
             console.log(ex.response)
         }
     }

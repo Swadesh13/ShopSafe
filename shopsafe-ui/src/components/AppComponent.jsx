@@ -55,14 +55,31 @@ class CustomAppBarClass extends Component {
         const { HideOnScroll } = this;
         const open = Boolean(this.state.anchorEl);
         const id = open ? "simple-popover" : undefined;
+        const homePage = !localStorage.getItem("userLogged");
+        console.log("home ",homePage);
         return (
             <HideOnScroll {...this.props}>
                 {/* <AppBar color="transparent"  style={{ flexGrow: 1,  }} > */}
-                <AppBar style={{ flexGrow: 1, background: "#00ff80" }}>
+                <AppBar
+                    color={homePage ? "transparent" : ""}
+                    elevation={homePage ? 0 : 6}
+                    disableGutters={homePage ? "true" : "false"}
+                    style={{
+                        flexGrow: 1,
+                        background: homePage ? "" : "#28da8b",
+                        //background: homePage ? "" : "#00ff80",
+                    }}
+                    //style={{ flexGrow: 1, background: "#00ff80" }}
+                >
                     <Toolbar>
-                        <Typography variant="h4" noWrap style={{ flexGrow: 1 }}>
-                            <b>ShopSafeJU</b>
-                        </Typography>
+                        <img
+                            src="https://storage.googleapis.com/shopsafe-ju/logonew.png"
+                            //src="https://drive.google.com/uc?export=view&id=18cWTWvu9cTgiZWWp_yDnwzvic3HDZPhz"
+                            width="60"
+                            height="50"
+                        />
+                        <div style={{ flexGrow: 1 }} />
+                        {/* <Typography variant="h4" noWrap /> */}
                         {auth ? (
                             <ProfileMenu
                                 menuOption={menuOption || []}
@@ -93,7 +110,10 @@ class CustomAppBarClass extends Component {
                                     }}
                                 >
                                     <Box m={2} p={2}>
-                                        <SignIn handleAuth={this.props.handleAuth} handleClose={this.handleClose} />
+                                        <SignIn
+                                            handleAuth={this.props.handleAuth}
+                                            handleClose={this.handleClose}
+                                        />
                                     </Box>
                                 </Popover>
                                 <Button

@@ -126,6 +126,14 @@ export const updateBookings = (data, id) => {
     });
 };
 
+export const updateShopDetails = (data) => {
+    return http.protectedPut(api.updateShop, { isShop: true, ...data });
+}
+
+export const updateCustomerDetails = (data) => {
+    return http.protectedPut(api.updateCustomer, { isShop: false, ...data });
+}
+
 export const userDetails = () => {
     return http.protectedPost(api.userData, { isShop: false });
 }
@@ -158,6 +166,10 @@ export const getShopDetailsAuthorized = () => {
 
 export const uploadPhoto = file => {
     return http.protectedPost(api.uploadProfilePhoto, file);
+}
+
+export const uploadShopPhoto = file => {
+    return http.uploadForm(api.uploadShopProfilePhoto, file);
 }
 
 export const validateSlotByOtp = (bookingId, otp) => {

@@ -12,7 +12,9 @@
   "bookSlot": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/booking",
   "reviews": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/reviews",
   "errorPageImage": "https://storage.googleapis.com/shopsafe-ju/error.jpg",
-  "uploadProfilePhoto": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/uploadProfilePhoto",
-  "validateSlot": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/validate"
-  
+  "uploadProfilePhoto": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/image",
+  "uploadShopProfilePhoto": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/shop/image",
+  "validateSlot": "https://us-central1-shopsafe-ju.cloudfunctions.net/api/validate",
+  "updateShop":"https://us-central1-shopsafe-ju.cloudfunctions.net/api/shop",
+  "updateCustomer":"https://us-central1-shopsafe-ju.cloudfunctions.net/api/user"
 }

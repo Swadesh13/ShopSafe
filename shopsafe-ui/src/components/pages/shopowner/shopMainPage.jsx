@@ -40,14 +40,14 @@ class ShopMainPage extends Component {
                             component={ShopProfile}
                         />
                         <Route path="/shopowner/logout/" component={Logout} />
-                        <Route
-                            path="/shopowner"
-                            component={() => <ShopProfile />}
-                        />
                         {/* <Route
                             path="/shopowner"
-                            component={() => <ShopDashboard />}
+                            component={() => <ShopProfile />}
                         /> */}
+                        <Route
+                            path="/shopowner"
+                            component={() => <ShopDashboard />}
+                        />
                     </Switch>
                 )}
             </main>
