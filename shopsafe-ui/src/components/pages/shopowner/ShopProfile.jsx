@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { getShopDetailsAuthorized } from "../../../services/userService";
+import {
+    getShopDetailsAuthorized,
+    updateShopDetails,
+    uploadShopPhoto,
+} from "../../../services/userService";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
@@ -17,6 +21,7 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 
 function timeString(h, m = 0) {
     let d = new Date();
@@ -54,6 +59,14 @@ class ShopProfile extends Component {
         shopData: {},
         data: {},
         item: "",
+        label: (
+            <label
+                htmlFor="uploadFile"
+                style={{
+                    cursor: "pointer",
+                }}
+            ></label>
+        ),
     };
 
     async componentDidMount() {
@@ -116,9 +129,43 @@ class ShopProfile extends Component {
         this.setState({ data });
     };
 
-    handleSubmit = () => {
+    handleSubmit = async () => {
         console.log("Data", this.state.data);
-    }
+        try {
+            const response = await updateShopDetails(this.state.data);
+            console.log(response);
+            alert(response.data.message);
+        } catch (ex) {
+            console.log(ex.response);
+        }
+    };
+
+    handleClickFile = () => {
+        document.getElementById("uploadFile").click();
+        console.log("button click");
+    };
+
+    updateImageFile = async (event) => {
+        console.log("input change triggered");
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append("Image", file);
+        const shopData2 = { ...this.state.shopData };
+
+        try {
+            const url = URL.createObjectURL(file);
+            const shopData = { ...this.state.shopData };
+            shopData.imgURL = url;
+            this.setState({ shopData });
+            this.forceUpdate();
+            const response = await uploadShopPhoto(formData);
+            console.log(response);
+            alert(response.data.message);
+        } catch (ex) {
+            console.log(ex.response);
+            this.setState({ shopData:shopData2 });
+        }
+    };
 
     //     address: "Sealdah Railway Station No 1 & 2, Sealdah, Raja Bazar, Calcutta, West Bengal, India"
     // bookingTimeUnit: 24
@@ -140,7 +187,8 @@ class ShopProfile extends Component {
 
     render() {
         const { shopData: data, data: info, item } = this.state;
-        const imageUrl = "https://picsum.photos/600/600";
+        const imageUrl =
+            "https://img.etimg.com/thumb/width-640,height-480,imgsize-789754,resizemode-1,msid-73320353/small-biz/sme-sector/the-kirana-is-a-technology-shop-too/kirana-bccl.jpg";
         const { classes, themes } = this.props;
         return (
             <React.Fragment>
@@ -170,12 +218,45 @@ class ShopProfile extends Component {
                                         borderRadius={16}
                                         boxShadow={3}
                                         style={{
-                                            backgroundImage: `url(${imageUrl})`,
+                                            backgroundImage: `url(${
+                                                data.imgURL || imageUrl
+                                            })`,
                                             height: 450,
                                             backgroundSize: "cover",
                                             width: "100%",
                                         }}
-                                    ></Box>
+                                    >
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justify="flex-end"
+                                            alignItems="flex-end"
+                                            style={{ height: "100%" }}
+                                        >
+                                            <Grid xs={12} item>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    style={{ width: "100%" }}
+                                                    onClick={
+                                                        this.handleClickFile
+                                                    }
+                                                >
+                                                    upload
+                                                </Button>
+
+                                                <input
+                                                    type="file"
+                                                    id="uploadFile"
+                                                    multiple="multiple"
+                                                    onChange={
+                                                        this.updateImageFile
+                                                    }
+                                                    style={{ display: "none" }}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
                                 </Grid>
                                 <Grid container item direction="row">
                                     <Grid

@@ -143,10 +143,16 @@ class Shops extends Component {
         // else newList = list.filter((c) => c.openingHour >= 12);
         if (filter.slotTypes.Afternoon)
             newList = newList.concat(
-                list.filter((c) => c.openingHour < 18 && c.closingHour >= 12)
+                list
+                    .filter((c) => c.openingHour < 18 && c.closingHour >= 12)
+                    .filter((c) => !newList.includes(c))
             );
         if (filter.slotTypes.Evening)
-            newList = newList.concat(list.filter((c) => c.closingHour > 18));
+            newList = newList.concat(
+                list
+                    .filter((c) => c.closingHour > 18)
+                    .filter((c) => !newList.includes(c))
+            );
 
         return newList;
     };
@@ -262,17 +268,34 @@ class Shops extends Component {
                                 spacing={10}
                                 style={{ width: "100%" }}
                             >
-                                {shopList.map((data, i) => (
-                                    <GridListTile
-                                        key={i}
-                                        cols={window.innerWidth < 500 ? 2 : 1}
-                                    >
-                                        <Shop
-                                            data={data}
-                                            userAddress={this.state.userAddress}
-                                        />
-                                    </GridListTile>
-                                ))}
+                                {shopList.length == 0 ? (
+                                    <Grid container xs={12} justify="center" direction="row">
+                                        <Grid item>
+                                            <Typography
+                                                variant="h5"
+                                                align="center"
+                                            >
+                                                No Shop Found
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                ) : (
+                                    shopList.map((data, i) => (
+                                        <GridListTile
+                                            key={i}
+                                            cols={
+                                                window.innerWidth < 500 ? 2 : 1
+                                            }
+                                        >
+                                            <Shop
+                                                data={data}
+                                                userAddress={
+                                                    this.state.userAddress
+                                                }
+                                            />
+                                        </GridListTile>
+                                    ))
+                                )}
                             </GridList>
                         )}
                     </Grid>
