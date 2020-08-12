@@ -92,14 +92,14 @@ export const logout = () => {
 };
 
 export const bookNewSlot = (data, id) => {
-    const { itemList, period, slot } = data;
+    const { itemList, period, slot,otp } = data;
     const slotName = period.toLowerCase();
     const body = {
         purchaseItems: itemList.join(),
         slotName: slotName,
         isShop: false,
         shopId: id,
-        otp: Math.round(Math.random(0, 1) * 777777 + 222222),
+        otp,
         slotGroupBegins: slot.start,
         slotGroupEnds: slot.end,
         customerName: localStorage.getItem("userName"),

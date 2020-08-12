@@ -49,10 +49,12 @@ class MyBookings extends Component {
             "data updated",
             this.state.slotData
         );
+
         try {
             console.log(copy.length);
             const { data } = await deleteSlots(id);
             console.log(data);
+            alert(data.message);
             this.forceUpdate();
         } catch (ex) {
             alert("An error occured");

@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
     },
     hero: {
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1558981852-426c6c22a060?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80')`,
-        height: "500px",
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('https://storage.googleapis.com/shopsafe-ju/eQ-banner.png')`,
+        height: "600px",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -73,9 +73,7 @@ function Home() {
 
     return (
         <div className={classes.root}>
-            <Box className={classes.hero}>
-                <Box>Lala Boi</Box>
-            </Box>
+            <Box className={classes.hero}>{/* <Box>Lala Boi</Box> */}</Box>
             <Container maxWidth="xl" className={classes.blogsContainer}>
                 <Box className={classes.promo}>
                     <Typography variant="h4" align="left">
@@ -100,7 +98,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                                image="https://storage.googleapis.com/shopsafe-ju/selectLocation.png"
                                 title="Contemplative Reptile"
                             />
                             <CardContent className={classes.cardContent}>
@@ -114,7 +112,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                                image="https://storage.googleapis.com/shopsafe-ju/selectShop.png"
                                 title="Contemplative Reptile"
                             />
                             <CardContent>
@@ -128,7 +126,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                                image="https://storage.googleapis.com/shopsafe-ju/selectSlot.png"
                                 title="Contemplative Reptile"
                             />
                             <CardContent>
@@ -142,7 +140,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                                image="https://storage.googleapis.com/shopsafe-ju/bookingDone.png"
                                 title="Contemplative Reptile"
                             />
                             <CardContent>
@@ -161,7 +159,7 @@ function Home() {
                 >
                     <Grid item xs={12} sm={6}>
                         <img
-                            src="https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                            src="https://storage.googleapis.com/shopsafe-ju/new-normal.jpg"
                             style={{ width: "100%" }}
                         />
                     </Grid>
@@ -175,12 +173,12 @@ function Home() {
                         spacing={5}
                     >
                         <Grid item>
-                            <Typography variant="h4" component="h4">
+                            <Typography variant="h2" component="h2">
                                 Shopping cum Social Distancing
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <Typography variant="body" component="body">
+                            <Typography variant="h6" component="h6">
                                 Our online-queueing algorithm is aimed at
                                 reducing overcrowding at shops and thus helps
                                 practise social distancing efficiently.
@@ -196,7 +194,7 @@ function Home() {
                 >
                     <Grid item xs={12} sm={6}>
                         <img
-                            src="https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                            src="https://storage.googleapis.com/shopsafe-ju/manage-booking.jpg"
                             style={{ width: "100%" }}
                         />
                     </Grid>
@@ -210,12 +208,12 @@ function Home() {
                         spacing={5}
                     >
                         <Grid item>
-                            <Typography variant="h4" component="h4">
+                            <Typography variant="h2" component="h2">
                                 Manage your position in real-time
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <Typography variant="body" component="body">
+                            <Typography variant="h6" component="h6">
                                 Our simple UI provides a seamless experience
                                 towards booking slots and managing them in
                                 real-time. It's just as if you are standing in a

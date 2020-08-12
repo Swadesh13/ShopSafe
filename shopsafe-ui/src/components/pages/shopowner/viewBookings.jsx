@@ -22,6 +22,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import { validateSlotByOtp } from "../../../services/userService";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 function timeString(h, m = 0) {
     let d = new Date();
@@ -39,7 +40,7 @@ class ViewBookings extends Component {
         isLoading: false,
         errorMessage: "",
         bookingsData: [],
-        filter: { status: "All", period: ["Morning", "Afternoon", "Evening"] },
+        filter: { status: "All", period: ["Morning", "Afternoon", "Evening"], todayOnly:true },
     };
 
     async componentDidMount() {
@@ -73,7 +74,7 @@ class ViewBookings extends Component {
     };
 
     filterData = () => {
-        const { status, period } = this.state.filter;
+        const { status, period,todayOnly } = this.state.filter;
         let data = [...this.state.bookingsData];
         console.log(period);
         //filter by period
@@ -88,6 +89,13 @@ class ViewBookings extends Component {
         if (period.indexOf("Evening") == -1) {
             data = data.filter((c) => c.arrivalHour < 18);
         }
+
+        if (todayOnly)
+            data = data.filter(c => {
+                const creationTime = new Date(c.createdAt);
+                const d = new Date(); d.setHours(0); d.setMinutes(0); d.setSeconds(0);
+                return creationTime.getTime() > d.getTime();
+            })
 
         //filter according to status
         if (status.localeCompare("All") == 0) return data;
@@ -117,7 +125,7 @@ class ViewBookings extends Component {
     render() {
         const data = this.filterData();
         return (
-            <Container maxWidth="lg" style={{ marginTop: 90 }}>
+            <Container maxWidth="xl" style={{ marginTop: 90 }}>
                 {this.state.isLoading ? (
                     <CircularProgress
                         style={{ marginLeft: window.innerWidth * 0.48 }}
@@ -149,7 +157,7 @@ class ViewBookings extends Component {
                                         color="primary"
                                         label={
                                             "Total: " +
-                                            this.state.bookingsData.length
+                                            data.length
                                         }
                                         style={{
                                             fontSize: 20,
@@ -161,7 +169,7 @@ class ViewBookings extends Component {
                                         color="secondary"
                                         label={
                                             "Pending: " +
-                                            this.state.bookingsData.filter(
+                                            data.filter(
                                                 (c) => c.status == 1
                                             ).length
                                         }
@@ -292,11 +300,11 @@ class RowBody extends Component {
     };
 
     render() {
-        const { data: row,index } = this.props;
+        const { data: row, index } = this.props;
         return (
             <TableRow>
                 <TableCell align="right" size="small">
-                    {index+ 1}
+                    {index + 1}
                 </TableCell>
                 <TableCell align="center" style={{ fontSize: 17 }}>
                     {row.customerName || "DemoName Zunaid"}
@@ -328,12 +336,20 @@ class Filter extends Component {
     state = {
         period: ["Morning", "Afternoon", "Evening"],
         status: "All",
+        todayOnly: true,
     };
 
     handleChange = (event) => {
         let data = { ...this.state };
         this.setState({ [event.target.name]: event.target.value });
         data[event.target.name] = event.target.value;
+        this.props.setFilter(data);
+    };
+
+    handleCheck = (event) => {
+        let data = { ...this.state };
+        this.setState({ [event.target.name]: event.target.checked });
+        data[event.target.name] = event.target.checked;
         this.props.setFilter(data);
     };
 
@@ -351,6 +367,19 @@ class Filter extends Component {
         return (
             <Paper elevation={0}>
                 <Grid container direction="row" spacing={2} justify="flex-end">
+                    <Grid item>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.state.todayOnly}
+                                    onChange={this.handleCheck}
+                                    name="todayOnly"
+                                    color="primary"
+                                />
+                            }
+                            label="Only Today"
+                        />
+                    </Grid>
                     <Grid item>
                         <FormControl style={{ minWidth: 150, maxWidth: 300 }}>
                             <InputLabel id="demo-mutiple-checkbox-label">

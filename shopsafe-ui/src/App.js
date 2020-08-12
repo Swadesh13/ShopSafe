@@ -6,12 +6,12 @@ import SignIn from "./components/pages/signin";
 import SignUp from "./components/pages/registration";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import MainPage from "./components/pages/customer/mainPage";
-import {CustomAppBar,Footer} from "./components/AppComponent";
+import { CustomAppBar, Footer } from "./components/AppComponent";
 import Home from "./components/home";
 import Logout from "./components/pages/shopowner/shopLogout";
 import { withRouter } from "react-router-dom";
-import ShopMainPage from './components/pages/shopowner/shopMainPage';
-import NotFound from './components/notFound';
+import ShopMainPage from "./components/pages/shopowner/shopMainPage";
+import NotFound from "./components/notFound";
 
 class App extends Component {
     state = {
@@ -127,13 +127,14 @@ class App extends Component {
             (shopOwnerLogged || customerLogged) &&
             (customerLogged ? customerMenu : shopOwnerMenu);
         return (
-            <div style={{ flexGrow: 1, backgroundColor: "#ffffff" }}>
-                <CustomAppBar
-                    menuOption={menuOption}
-                    auth={shopOwnerLogged || customerLogged}
-                    handleAuth={this.handleAuth}
-                />
-                {/* <Grid
+            <React.Fragment>
+                <div style={{ flexGrow: 1, backgroundColor: "#ffffff" }}>
+                    <CustomAppBar
+                        menuOption={menuOption}
+                        auth={shopOwnerLogged || customerLogged}
+                        handleAuth={this.handleAuth}
+                    />
+                    {/* <Grid
                     container
                     direction="row"
                     justify="center"
@@ -169,9 +170,11 @@ class App extends Component {
                         <Route path="/" exact component={Home} />
                         <Redirect to="/404"></Redirect>
                     </Switch>
-                {/* </Grid> */}
+                    {/* </Grid> */}
+                </div>
+                <div style={{ flexGrow: 1,direction:"column" }} />
                 <Footer />
-            </div>
+            </React.Fragment>
         );
     }
 }

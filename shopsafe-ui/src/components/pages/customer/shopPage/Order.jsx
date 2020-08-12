@@ -41,12 +41,13 @@ class Order extends Component {
             itemList: [],
             period: "Morning",
             slot: {},
+            otp: Math.round(Math.random(0, 1) * 777777 + 222222),
         },
         slotLabel: "",
         item: "",
         openModal: false,
         dialogueData: {},
-        errors:{},
+        errors: {},
     };
 
     // componentDidMount() {
@@ -71,22 +72,34 @@ class Order extends Component {
             closingMinute,
         } = this.props.data;
         let period = [
-            { label: "Morning", slot: { start: {h:0,m:0}, end: {h:12,m:0} } },
-            { label: "Afternoon", slot: { start: {h:12,m:0}, end: {h:18,m:0} } },
-            { label: "Evening", slot: { start: {h:18,m:0}, end: {h:24,m:0} } },
+            {
+                label: "Morning",
+                slot: { start: { h: 0, m: 0 }, end: { h: 12, m: 0 } },
+            },
+            {
+                label: "Afternoon",
+                slot: { start: { h: 12, m: 0 }, end: { h: 18, m: 0 } },
+            },
+            {
+                label: "Evening",
+                slot: { start: { h: 18, m: 0 }, end: { h: 24, m: 0 } },
+            },
         ];
         if (openingHour < 12 && openingHour > 0) {
             period[0].slot.start = { h: openingHour, m: openingMinute };
         } else if (openingMinute >= 12 && openingHour < 18) {
             period.splice(0, 1);
             period[0].slot.start = { h: openingHour, m: openingMinute };
-        }else if (openingMinute >= 18 && openingHour < 24) {
+        } else if (openingMinute >= 18 && openingHour < 24) {
             period.splice(0, 2);
             period[0].slot.start = { h: openingHour, m: openingMinute };
         }
 
         if (closingHour > 0 && closingHour <= 12) {
-            period[period.length-1].slot.end = { h: closingHour, m: closingMinute };
+            period[period.length - 1].slot.end = {
+                h: closingHour,
+                m: closingMinute,
+            };
             period.splice(1, 2);
         } else if (closingHour > 12 && closingHour <= 18) {
             period[period.length - 1].slot.end = {
@@ -94,21 +107,21 @@ class Order extends Component {
                 m: closingMinute,
             };
             period.splice(2, 1);
-        }else if (closingHour > 18 && closingHour <= 24) {
+        } else if (closingHour > 18 && closingHour <= 24) {
             period[period.length - 1].slot.end = {
                 h: closingHour,
                 m: closingMinute,
             };
         }
-        
-        return period;  
+
+        return period;
     };
 
     getSlotTimes = (period) => {
         let slotTimeArr = [];
         let stime = new Date();
         const currentTime = new Date();
-        const gap = 60*60 * 1000;
+        const gap = 60 * 60 * 1000;
         if (!period)
             period = this.formData.period.filter(
                 (c) => !c.label.localeCompare(this.state.data.period)
@@ -117,12 +130,23 @@ class Order extends Component {
         stime.setHours(period.start);
         stime.setMinutes(0);
         stime.setSeconds(0);
-        const { openingHour, openingMinute, closingHour, closingMinute } = this.props.data;
+        const {
+            openingHour,
+            openingMinute,
+            closingHour,
+            closingMinute,
+        } = this.props.data;
         if (period.end < currentTime.getHours()) return [];
-        while (stime.getHours() < period.end && stime.getHours()<closingHour) {
+        while (
+            stime.getHours() < period.end &&
+            stime.getHours() < closingHour
+        ) {
             const start = new Date(stime);
             const end = new Date(stime.getTime() + duration);
-            if (start.getTime() < currentTime.getTime() || start.getHours()<openingHour ) {
+            if (
+                start.getTime() < currentTime.getTime() ||
+                start.getHours() < openingHour
+            ) {
                 stime.setTime(stime.getTime() + gap);
                 continue;
             }
@@ -140,7 +164,7 @@ class Order extends Component {
                     minute: "numeric",
                     hour12: true,
                 });
-            
+
             slotTimeArr.push(slot);
             //if (start.getHours() <= this.props.closingHour) break;
             stime.setTime(stime.getTime() + gap);
@@ -159,7 +183,7 @@ class Order extends Component {
     handleAddItem = () => {
         const data = { ...this.state.data };
         if (this.state.item) data.itemList.push(this.state.item);
-        this.setState({ data, item: "",errors:{} });
+        this.setState({ data, item: "", errors: {} });
     };
 
     handleSlotTime = (e) => {
@@ -188,7 +212,8 @@ class Order extends Component {
                 this.state.data,
                 this.props.data.shopId
             );
-            this.setState({ dialogueData: data });
+            const otp = this.state.data.otp;
+            this.setState({ dialogueData: {otp, ...data} });
             this.setState({ openModal: true });
         } catch (ex) {
             console.log(ex);
@@ -204,7 +229,7 @@ class Order extends Component {
     render() {
         //console.log("order:", this.periodData());
         const { data, item, openModal, slotLabel } = this.state;
-        const  {period}  = this.formData;
+        const { period } = this.formData;
         const { classes } = this.props;
         const {
             handlePeriod,
@@ -358,7 +383,10 @@ class Order extends Component {
                         <br />
                         <Grid item container direction="row" justify="center">
                             <Button
-                                disabled={Object.keys(this.state.data.slot).length===0}
+                                disabled={
+                                    Object.keys(this.state.data.slot).length ===
+                                    0
+                                }
                                 color="primary"
                                 variant="contained"
                                 onClick={handleBooking}
@@ -407,8 +435,7 @@ class ModalNoticeBody extends Component {
             arrivalMinute,
             deliveryHour,
             bookingId,
-            customerId,
-            duration,
+            otp,
             deliveryMinute,
         } = this.props.data;
         return (
@@ -429,7 +456,9 @@ class ModalNoticeBody extends Component {
                         </b>
                     </p>
                 </Typography>
-                <Typography variant="h6" align="center">
+                <Typography variant="h5" align="center">
+                    OTP: <b>{otp}</b>
+                </Typography><Typography variant="h6" align="center">
                     Your Booking Id: <b>{bookingId}</b>
                 </Typography>
             </Box>
