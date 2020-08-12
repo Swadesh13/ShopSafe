@@ -72,12 +72,14 @@ class CustomAppBarClass extends Component {
                     //style={{ flexGrow: 1, background: "#00ff80" }}
                 >
                     <Toolbar>
-                        <img
-                            src="https://storage.googleapis.com/shopsafe-ju/logonew.png"
-                            //src="https://drive.google.com/uc?export=view&id=18cWTWvu9cTgiZWWp_yDnwzvic3HDZPhz"
-                            width="60"
-                            height="50"
-                        />
+                        {homePage || (
+                            <img
+                                src="https://storage.googleapis.com/shopsafe-ju/logonew.png"
+                                //src="https://drive.google.com/uc?export=view&id=18cWTWvu9cTgiZWWp_yDnwzvic3HDZPhz"
+                                width="60"
+                                height="50"
+                            />
+                        )}
                         <div style={{ flexGrow: 1 }} />
                         {/* <Typography variant="h4" noWrap /> */}
                         {auth ? (
@@ -88,10 +90,12 @@ class CustomAppBarClass extends Component {
                         ) : (
                             <React.Fragment>
                                 <Button
-                                    variant="outlined"
+                                    variant="contained"
                                     onClick={this.handleSignIn}
                                     color="primary"
-                                    style={{ margin: 3 }}
+                                    style={{
+                                        margin: 3,
+                                    }}
                                 >
                                     Sign In
                                 </Button>
@@ -117,10 +121,12 @@ class CustomAppBarClass extends Component {
                                     </Box>
                                 </Popover>
                                 <Button
-                                    variant="outlined"
+                                    variant="contained"
                                     onClick={this.handleSignUp}
                                     color="primary"
-                                    style={{ margin: 3 }}
+                                    style={{
+                                        margin: 3,
+                                    }}
                                 >
                                     Sign Up
                                 </Button>
@@ -139,18 +145,30 @@ class CustomFooter extends Component {
     state = {};
     render() {
         return (
-            <footer
+            // <footer
+            //     style={{
+            //         backgroundColor: "grey",
+            //         position: "relative",
+            //         left: 0,
+            //         bottom: 0,
+            //         marginTop: "auto",
+            //         width: "100%",
+            //     }}
+            // >
+            //     This is footer
+            // </footer>
+            <div
                 style={{
-                    backgroundColor: "grey",
-                    position: "fixed",
-                    left: 0,
-                    bottom: 0,
-                    marginTop: "auto",
                     width: "100%",
+                    height: "35x",
+                    margin: 20,
+                    bottom: 0,
+                    marginBottom: 0,
+                    background: "#28da8b",
                 }}
             >
-                This is footer
-            </footer>
+                <Typography variant="body1" align="center">Copyright © 2020 eQ.  All rights reserved</Typography>
+            </div>
         );
     }
 }

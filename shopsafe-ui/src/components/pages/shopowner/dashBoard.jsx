@@ -20,7 +20,15 @@ class ShopDashboard extends Component {
         try {
             const response1 = await getShopBookings();
             console.log(response1.data);
-            this.setState({ bookingsData: response1.data, errorMessage: "" });
+            const data = response1.data.filter((c) => {
+                const creationTime = new Date(c.createdAt);
+                const d = new Date();
+                d.setHours(0);
+                d.setMinutes(0);
+                d.setSeconds(0);
+                return creationTime.getTime() > d.getTime();
+            });
+            this.setState({ bookingsData:data , errorMessage: "" });
             const response2 = await getShopDetailsAuthorized();
             this.setState({ shopData: response2.data.userCredentials });
         } catch (ex) {

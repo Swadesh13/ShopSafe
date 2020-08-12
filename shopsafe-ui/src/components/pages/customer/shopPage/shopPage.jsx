@@ -101,7 +101,7 @@ class ShopPage extends Component {
         console.log(this.state, this.props.userAddress);
         const { classes } = this.props;
         const {
-            imgUrl,
+            imageUrl,
             tags,
             payment_modes,
             shopRating: rating,
@@ -118,10 +118,10 @@ class ShopPage extends Component {
             closingHour,
             closingMinute,
         } = this.state.data;
-        const imageUrl =
-            imgUrl ||
-            "https://picsum.photos/600/" +
-                Math.round(Math.random(0, 1) * 200 + 500);
+        // const imageUrl =
+        //     imgUrl ||
+        //     "https://picsum.photos/600/" +
+        //         Math.round(Math.random(0, 1) * 200 + 500);
 
         return (
             <React.Fragment>
