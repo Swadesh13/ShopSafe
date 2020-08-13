@@ -34,10 +34,6 @@ class FilterCard extends Component {
     state = {
         filter: {
             openClose: { showAll: true, isOpen: false },
-            // distanceRating: {
-            //     //distance: { selected: true, ascOrder: true },
-            //     //rating: { selected: false, ascOrder: true },
-            // },
             items: [],
             slotTypes: { Morning: true, Afternoon: true, Evening: true },
             customerRatings:{"4":false,"3":false},
@@ -76,7 +72,7 @@ class FilterCard extends Component {
         let filter = { ...this.state.filter };
         filter[name] = value;
         this.setState({ filter });
-        this.props.updateFilter(this.state.filter);
+        this.props.updateFilter(filter);
     };
 
     handleSlot = event => {
@@ -171,16 +167,7 @@ class FilterCard extends Component {
                             name="items"
                             label="Type of Items Available"
                             theme={theme}
-                            items={[
-                                "Meat & Fish",
-                                "Grocery",
-                                "Condiments(Spices)",
-                                "Grains and Bread",
-                                "Dairy & Eggs",
-                                "Oil & Fat",
-                                "Tinned & Dried Produce",
-                                "Electronics",
-                            ]}
+                            items={this.props.itemList}
                         />
                     </Box>
                     <Box p={1} style={{ width: "90%", paddingLeft: 15 }}>
@@ -221,74 +208,6 @@ class FilterCard extends Component {
                             ))}
                         </Grid>
                     </Box>
-                    {/* <Grid
-                        item
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        xs={12}
-                    >
-                        <Typography variant="h5">
-                            <b>Sort By</b>
-                        </Typography>
-                    </Grid>
-                    <Box m={1} p={1} style={{ width: "100%" }}>
-                        <Grid item container xs={12}>
-                            <Grid
-                                item
-                                container
-                                xs={6}
-                                direction="row"
-                                justify="center"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleDR("distance")}
-                            >
-                                <Typography
-                                    variant="button"
-                                    display="block"
-                                    gutterBottom
-                                    align="center"
-                                >
-                                    Distance
-                                </Typography>
-                                {dr.distance ? (
-                                    dr.distance.ascOrder ? (
-                                        <ArrowDropUpIcon />
-                                    ) : (
-                                        <ArrowDropDownIcon />
-                                    )
-                                ) : null}
-                            </Grid>
-                            <Grid
-                                item
-                                container
-                                direction="row"
-                                xs={6}
-                                justify="center"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleDR("rating")}
-                            >
-                                <Typography
-                                    variant="button"
-                                    display="block"
-                                    gutterBottom
-                                    align="center"
-                                >
-                                    Rating
-                                </Typography>
-                                {dr.rating ? (
-                                    dr.rating.ascOrder ? (
-                                        <ArrowDropUpIcon />
-                                    ) : (
-                                        <ArrowDropDownIcon />
-                                    )
-                                ) : null}
-                            </Grid>
-                        </Grid>
-                    </Box>
-                    <Box m={1} p={1} style={{ width: "100%" }}>
-                        <Grid item container xs={12}></Grid>
-                    </Box> */}
                 </Grid>
             </Box>
         );

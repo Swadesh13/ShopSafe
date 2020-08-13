@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
         elevation: 0,
     },
     media: {
-        height: 200,
+        height: 350,
         [theme.breakpoints.down("sm")]: {
             height: 100,
         },
