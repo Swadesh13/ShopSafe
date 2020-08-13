@@ -21,7 +21,10 @@
     "firebase-functions": "^3.6.1",
     "google-distance": "^1.0.1",
     "request": "^2.88.2",
-    "sha256": "^0.2.0"
+    "sha256": "^0.2.0",
+    "json-write": "^1.0.0",
+    "jsonfile": "^6.0.1",
+    "parse-json": "^5.0.1"
   },
   "devDependencies": {
     "eslint": "^5.12.0",

@@ -5,8 +5,6 @@ const auth = require("./util/auth");
 var cors = require("cors");
 app.use(cors());
 
-const { extract } = require("./APIs/flipkart-grid");
-
 const { loginuser, logoutuser } = require("./APIs/user");
 
 const { rateShop, getReviews, editReview } = require("./APIs/ratings");
@@ -67,7 +65,5 @@ app.get("/logout", auth, logoutuser);
 
 app.post("/encrypt", encryptdata);
 app.post("/rate", auth, rateShop);
-
-app.post("/extract", extract);
 
 exports.api = functions.https.onRequest(app);

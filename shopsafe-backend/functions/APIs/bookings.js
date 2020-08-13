@@ -127,7 +127,12 @@ exports.getAllBookings = (request, response) => {
 };
 exports.createBooking = (request, response) => {
   var shopDetails = [];
-  console.log(request.body);
+  if (
+    Number(request.body.slotGroupBegins) == Number(request.body.slotGroupEnds)
+  )
+    return response
+      .status(400)
+      .json({ message: "Slot span must be at least one hour" });
   db.collection("shops")
     .where("userId", "==", request.body.shopId)
     .limit(1)
@@ -149,11 +154,14 @@ exports.createBooking = (request, response) => {
       return response.status(500).json({ error: err.code });
     });
   function booknow(shopDetails) {
-    if (request.user.isShop) {
-      return response.status(400).json({
-        message: "User must be logged in as customer to create booking",
-      });
-    } else if (
+    // if (request.user.isShop == "true") {
+    //   return response.status(400).json({
+    //     message: "User must be logged in as customer to create booking",
+    //   });
+    // } else if (
+    request.body.slotGroupBegins = Number(request.body.slotGroupBegins);
+    request.body.slotGroupEnds = Number(request.body.slotGroupEnds);
+    if (
       request.body.slotGroupBegins < shopDetails[0].openingHour ||
       request.body.slotGroupEnds > shopDetails[0].closingHour
     ) {

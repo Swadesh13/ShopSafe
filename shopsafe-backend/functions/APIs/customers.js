@@ -112,6 +112,7 @@ exports.getUserDetail = (request, response) => {
 
 exports.updateUserDetails = (request, response) => {
   let document = db.collection("customers").doc(`${request.user.email}`);
+  delete request.body.isShop;
   document
     .update(request.body)
     .then(() => {
@@ -340,6 +341,7 @@ exports.getShops = (request, response) => {
           payment_modes: doc.data().payment_modes,
           tags: doc.data().tags,
           shopId: doc.data().userId,
+          imageUrl: doc.data().imageUrl,
           ownerName: doc.data().ownerName,
           distancemetric: 1.54,
           travelDuration: 313,

@@ -13,7 +13,11 @@ module.exports = (request, response, next) => {
     console.error("No token found");
     return response.status(403).json({ error: "Unauthorized" });
   }
-  if (request.url != "/logout") {
+  if (
+    request.url != "/logout" &&
+    request.url != "/image" &&
+    request.url != "/shop/image"
+  ) {
     if (typeof request.body.isShop == "undefined") {
       return response.status(403).json({ message: "isShop property missing" });
     }
