@@ -98,7 +98,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://storage.googleapis.com/shopsafe-ju/selectLocation.png"
+                                image="https://storage.googleapis.com/shopsafe-ju/1.jpeg"
                                 title="Contemplative Reptile"
                             />
                             <CardContent className={classes.cardContent}>
@@ -112,7 +112,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://storage.googleapis.com/shopsafe-ju/selectShop.png"
+                                image="https://storage.googleapis.com/shopsafe-ju/2.jpeg"
                                 title="Contemplative Reptile"
                             />
                             <CardContent>
@@ -126,7 +126,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://storage.googleapis.com/shopsafe-ju/selectSlot.png"
+                                image="https://storage.googleapis.com/shopsafe-ju/3.jpeg"
                                 title="Contemplative Reptile"
                             />
                             <CardContent>
@@ -140,7 +140,7 @@ function Home() {
                         <Card className={classes.card}>
                             <CardMedia
                                 className={classes.media}
-                                image="https://storage.googleapis.com/shopsafe-ju/bookingDone.png"
+                                image="https://storage.googleapis.com/shopsafe-ju/4.jpeg"
                                 title="Contemplative Reptile"
                             />
                             <CardContent>
