@@ -146,11 +146,17 @@ class CustomAppBarClass extends Component {
 
 class CustomFooter extends Component {
     state = {};
+    handleGit = () => {
+        window.location = "https://github.com/Swadesh13/ShopSafe";
+    }
+    handleApp = () => {
+        window.location = "https://github.com/Swadesh13/ShopSafe";
+    }
     render() {
         return (
             <div
                 style={{
-                    width: "100%",
+                    //width: "100%",
                     height: "35x",
                     bottom: 0,
                     paddingTop: 10,
@@ -159,7 +165,7 @@ class CustomFooter extends Component {
                     background: "#f2f2e4",
                 }}
             >
-                <Grid container spacing={2}>
+                <Grid container direction="row" justify="center" >
                     <Grid
                         item
                         container
@@ -167,7 +173,7 @@ class CustomFooter extends Component {
                         justify="space-evenly"
                         spacing={2}
                         alignItems="center"
-                        xs={4}
+                        xs={3}
                     >
                         <Grid item>
                             <img
@@ -188,11 +194,20 @@ class CustomFooter extends Component {
                         justify="center"
                         alignItems="center"
                         direction="column"
-                        xs={4}
+                        xs={3}
                     >
                         <Link href="#">Home</Link>
                         <Link href="#">Privacy Policy</Link>
                         <Link href="#">About Us</Link>
+                    </Grid>
+                    <Grid
+                        item
+                        container
+                        justify="center"
+                        alignItems="center"
+                        direction="column"
+                        xs={3}
+                    >
                         <Link href="#">Helps and Support</Link>
                         <Link href="#">Terms and Condition</Link>
                     </Grid>
@@ -202,24 +217,40 @@ class CustomFooter extends Component {
                         justify="center"
                         alignItems="center"
                         direction="column"
-                        xs={4}
+                        xs={3}
                     >
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            style={{ margin: 2 }}
-                            startIcon={<AndroidOutlinedIcon />}
-                        >
-                            Download App
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            style={{ margin: 2 }}
-                            startIcon={<GitHubIcon />}
-                        >
-                            Contribute
-                        </Button>
+                        <Box
+                            borderRadius={5}
+                            style={{
+                                backgroundImage: `url(
+                                    "https://storage.googleapis.com/shopsafe-ju/play_store.png"
+                                )`,
+                                height: "50px",
+                                width: "180px",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                cursor: "pointer",
+                                marginTop: 2,
+                                marginBottom: 2,
+                            }}
+                            onClick={this.handleApp}
+                        />
+                        <Box
+                            borderRadius={5}
+                            style={{
+                                backgroundImage: `url(
+                                    "https://storage.googleapis.com/shopsafe-ju/github.jpeg"
+                                )`,
+                                height: "50px",
+                                width: "180px",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                cursor: "pointer",
+                                marginTop: 2,
+                                marginBottom: 2,
+                            }}
+                            onClick={this.handleGit}
+                        />
                     </Grid>
                     <Grid item container justify="center">
                         <Typography variant="body1" align="center">

@@ -172,7 +172,6 @@ class App extends Component {
                     </Switch>
                     {/* </Grid> */}
                 </div>
-                <div style={{ flexGrow: 1,direction:"column" }} />
                 <Footer />
             </React.Fragment>
         );
