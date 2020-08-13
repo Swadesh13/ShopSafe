@@ -136,7 +136,16 @@ class Shops extends Component {
         };
         if (!filter.openClose.showAll) list = list.filter((c) => openedNow(c));
 
-        //Period Based
+        //Items Based 
+        if (filter.items.length != 0)
+            list = list.filter(shop => {
+                for (let tag of shop.tags) {
+                    if (filter.items.includes(tag)) return true;
+                }
+                return false;
+            });
+
+        //Period Based(Must filter at last)
         let newList = [];
         if (filter.slotTypes.Morning)
             newList = list.filter((c) => c.openingHour < 12);
@@ -168,6 +177,14 @@ class Shops extends Component {
     handleAddress = () => {
         this.updateShopList();
     };
+
+    getItemList = shopList => {
+        let itemList = [];
+        for (const shop of shopList) {
+            itemList = [...shop.tags , ...itemList];
+        }
+        return Array.from(new Set(itemList));
+    }
 
     render() {
         const shopList = this.filterList();
@@ -201,7 +218,7 @@ class Shops extends Component {
                                     width: "100%",
                                     marginTop: 23,
                                 }}
-                                p={2}
+                                p={3}
                                 borderRadius={5}
                             >
                                 <Typography variant="body1">
@@ -214,8 +231,8 @@ class Shops extends Component {
                                     onChange={this.handleChange}
                                     min={1}
                                     max={5}
-                                    marks
-                                    valueLabelDisplay="auto"
+                                    marks={[{value:1,label:"1 km"},{value:2},{value:3},{value:4},{value:5,label:'5 km'}]}
+                                    valueLabelDisplay="on"
                                 />
                             </Box>
                         </Grid>
@@ -227,7 +244,7 @@ class Shops extends Component {
                             alignItems="center"
                             style={{ width: "100%" }}
                         >
-                            <FilterCard updateFilter={this.updateFilter} />
+                            <FilterCard updateFilter={this.updateFilter} itemList={this.getItemList(this.state.shopData)} />
                         </Grid>
                     </Grid>
                     <Grid
