@@ -1,6 +1,8 @@
 # eQ
 Queue for the new normal
 
+![logo](./logo-eq.png)
+
 ## Table of Contents
 * [General Info](#general-info)
 * [Website](#website)
