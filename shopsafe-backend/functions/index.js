@@ -23,7 +23,6 @@ const {
   uploadProfilePhoto,
   getShops,
   shopDetails,
-  checkapi,
   encryptdata,
 } = require("./APIs/customers");
 
@@ -50,7 +49,6 @@ app.post("/image", auth, uploadProfilePhoto);
 app.get("/shop/:shopId", shopDetails);
 app.post("/reviews", getReviews);
 app.put("/review", auth, editReview);
-app.get("/checkapi", checkapi);
 
 // bookings routes
 app.post("/bookings", auth, getAllBookings);

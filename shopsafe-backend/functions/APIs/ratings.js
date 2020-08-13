@@ -4,28 +4,6 @@ const { validateRating, validateEditRating } = require("../util/validators");
 exports.rateShop = (request, response) => {
   if (request.body.isShop == false) {
     var d = new Date();
-
-    // db.collection("bookings")
-    //   .where("customerId", "==", request.user.uid)
-    //   .where("shopId", "==", request.body.shopId)
-    //   .get()
-    //   .then((data) => {
-    //     data.forEach((doc) => {
-    //       console.log(doc.exists);
-    //       if (doc.exists) ratenow();
-    //       else
-    //         return response.status(400).json({
-    //           message:
-    //             "User should have completed at least one transaction to rate the shop",
-    //         });
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //     return response.status(400).json(error.code);
-    //   });
-
-    // function ratenow() {
     var newRating = {
       rating: request.body.rating,
       review:
@@ -100,7 +78,6 @@ exports.rateShop = (request, response) => {
           getUser();
         });
     }
-    // }
   } else {
     return response
       .status(400)

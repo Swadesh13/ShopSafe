@@ -63,7 +63,6 @@ exports.validateSignUpShop = (data) => {
 		errors.payment_modes = "Must have atleast 1 payment_mode";
 	if (!data.discount || data.discount < 0 || data.discount > 100)
 	errors.discount = "Must be between 0 and 100";
-	// if (length(data.shopRating)!=2) errors.shopRating = "Must have 2 fields: Rating and Number of customers";
 	if (!data.bookingTimeUnit || data.bookingTimeUnit <= 0)
 	errors.bookingTimeUnit = "Must be a value greater than 0";
 	if (!data.maxConcurrent || data.maxConcurrent <= 0)
@@ -93,7 +92,6 @@ exports.validateSignUpCustomer = (data) => {
   if (isEmpty(data.password)) errors.password = "Must not be empty";
   if (data.password !== data.confirmPassword)
     errors.confirmPassword = "Passowrds must be the same";
-  // if (isEmpty(data.username)) errors.username = 'Must not be empty';
 
   const genders = ["Male", "Female", "Others"];
   if (!genders.includes(data.gender)) errors.gender = "Must be a valid sex";

@@ -4,8 +4,6 @@ const config = require("../util/config");
 const firebase = require("firebase");
 const { validateLoginData, validateSignUpShop } = require("../util/validators");
 
-// firebase.initializeApp(config);
-
 // Signup
 exports.signUpShop = (request, response) => {
   const newUser = {
@@ -22,7 +20,6 @@ exports.signUpShop = (request, response) => {
     closingMinute: request.body.closingMinute,
     tags: request.body.tags,
     shopRating: [0, 0],
-    // shopPhoto: "url",
     payment_modes: request.body.payment_modes,
     discount: request.body.discount,
     bookingTimeUnit: request.body.bookingTimeUnit,
@@ -81,7 +78,6 @@ exports.signUpShop = (request, response) => {
         closingMinute: newUser.closingMinute,
         tags: newUser.tags,
         shopRating: newUser.shopRating,
-        // shopPhoto: newUser.shopPhoto,
         payment_modes: newUser.payment_modes,
         discount: newUser.discount,
         bookingTimeUnit: newUser.bookingTimeUnit,

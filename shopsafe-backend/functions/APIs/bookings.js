@@ -1,13 +1,7 @@
 const { db, admin } = require("../util/admin");
 const { validateBooking } = require("../util/validators");
 
-// const config = require("../util/config");
-
-// const firebase = require("firebase");
-// firebase.initializeApp(config);
-
 exports.getAllBookings = (request, response) => {
-  // console.log("request object", request.user);
   if (request.user.isShop) {
     db.collection("bookings")
       .where("shopId", "==", request.user.uid)
@@ -17,7 +11,6 @@ exports.getAllBookings = (request, response) => {
       .then((data) => {
         var arrivalTime, deliveryTime, suffix;
         let bookings = [];
-        var customerName;
         data.forEach((doc) => {
           suffix = doc.data().arrivalHour >= 12 ? "PM" : "AM";
           arrivalTime =
@@ -122,8 +115,6 @@ exports.getAllBookings = (request, response) => {
         return response.status(500).json({ error: err.code });
       });
   }
-  //   }
-  // });
 };
 exports.createBooking = (request, response) => {
   var shopDetails = [];
@@ -154,11 +145,6 @@ exports.createBooking = (request, response) => {
       return response.status(500).json({ error: err.code });
     });
   function booknow(shopDetails) {
-    // if (request.user.isShop == "true") {
-    //   return response.status(400).json({
-    //     message: "User must be logged in as customer to create booking",
-    //   });
-    // } else if (
     request.body.slotGroupBegins = Number(request.body.slotGroupBegins);
     request.body.slotGroupEnds = Number(request.body.slotGroupEnds);
     if (
@@ -226,7 +212,6 @@ exports.createBooking = (request, response) => {
               }
               create(listCustomers);
             });
-          // return response.json(lastCustomer[0]);
         })
         .catch((err) => {
           console.error(err);
