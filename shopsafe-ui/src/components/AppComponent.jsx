@@ -1,6 +1,6 @@
 //Only for App.js, Includes Appbar and Options,
-
 import React, { Component } from "react";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import AppBar from "@material-ui/core/AppBar";
@@ -13,8 +13,11 @@ import Button from "@material-ui/core/Button";
 import Slide from "@material-ui/core/Slide";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Popover from "@material-ui/core/Popover";
-import { Box } from "@material-ui/core";
+import { Box, Grid } from "@material-ui/core";
 import SignIn from "./pages/signin";
+import AndroidOutlinedIcon from '@material-ui/icons/AndroidOutlined';
+import GitHubIcon from "@material-ui/icons/GitHub";
+
 
 class CustomAppBarClass extends Component {
     state = {
@@ -56,7 +59,7 @@ class CustomAppBarClass extends Component {
         const open = Boolean(this.state.anchorEl);
         const id = open ? "simple-popover" : undefined;
         const homePage = !localStorage.getItem("userLogged");
-        console.log("home ",homePage);
+        console.log("home ", homePage);
         return (
             <HideOnScroll {...this.props}>
                 {/* <AppBar color="transparent"  style={{ flexGrow: 1,  }} > */}
@@ -145,29 +148,85 @@ class CustomFooter extends Component {
     state = {};
     render() {
         return (
-            // <footer
-            //     style={{
-            //         backgroundColor: "grey",
-            //         position: "relative",
-            //         left: 0,
-            //         bottom: 0,
-            //         marginTop: "auto",
-            //         width: "100%",
-            //     }}
-            // >
-            //     This is footer
-            // </footer>
             <div
                 style={{
                     width: "100%",
                     height: "35x",
-                    margin: 20,
                     bottom: 0,
-                    marginBottom: 0,
-                    background: "#28da8b",
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    marginBottom: -1,
+                    background: "#f2f2e4",
                 }}
             >
-                <Typography variant="body1" align="center">Copyright © 2020 eQ.  All rights reserved</Typography>
+                <Grid container spacing={2}>
+                    <Grid
+                        item
+                        container
+                        direction="column"
+                        justify="space-evenly"
+                        spacing={2}
+                        alignItems="center"
+                        xs={4}
+                    >
+                        <Grid item>
+                            <img
+                                src="https://storage.googleapis.com/shopsafe-ju/eQ-logo-circle.png"
+                                width="60"
+                                heigt="60"
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="body1" align="center">
+                                Queue for the New Normal
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid
+                        item
+                        container
+                        justify="center"
+                        alignItems="center"
+                        direction="column"
+                        xs={4}
+                    >
+                        <Link href="#">Home</Link>
+                        <Link href="#">Privacy Policy</Link>
+                        <Link href="#">About Us</Link>
+                        <Link href="#">Helps and Support</Link>
+                        <Link href="#">Terms and Condition</Link>
+                    </Grid>
+                    <Grid
+                        item
+                        container
+                        justify="center"
+                        alignItems="center"
+                        direction="column"
+                        xs={4}
+                    >
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            style={{ margin: 2 }}
+                            startIcon={<AndroidOutlinedIcon />}
+                        >
+                            Download App
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            style={{ margin: 2 }}
+                            startIcon={<GitHubIcon />}
+                        >
+                            Contribute
+                        </Button>
+                    </Grid>
+                    <Grid item container justify="center">
+                        <Typography variant="body1" align="center">
+                            Copyright © 2020 eQ. All rights reserved
+                        </Typography>
+                    </Grid>
+                </Grid>
             </div>
         );
     }

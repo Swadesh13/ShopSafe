@@ -11,8 +11,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import Slider from "@material-ui/core/Slider";
 
 
 const useStyles = (theme) => ({
@@ -36,7 +35,8 @@ class FilterCard extends Component {
             openClose: { showAll: true, isOpen: false },
             items: [],
             slotTypes: { Morning: true, Afternoon: true, Evening: true },
-            customerRatings:{"4":false,"3":false},
+            customerRatings: { "4": false, "3": false },
+            distance:3,
         },
     };
 
@@ -55,18 +55,6 @@ class FilterCard extends Component {
         this.props.updateFilter(this.state.filter);
     };
 
-    handleDR = (name) => {
-        let filter = { ...this.state.filter };
-        if (filter.distanceRating[name])
-            filter.distanceRating[name].ascOrder = !filter.distanceRating[name]
-                .ascOrder;
-        else
-            filter.distanceRating = {
-                [name]: { ascOrder: true },
-            };
-        this.setState({ filter });
-        this.props.updateFilter(this.state.filter);
-    };
 
     handleSelect = ({ target: { name, value } }) => {
         let filter = { ...this.state.filter };
@@ -89,14 +77,21 @@ class FilterCard extends Component {
         this.props.updateFilter(this.state.filter);
     }
 
+    handleChange = (event, distance) => {
+        let filter = { ...this.state.filter };
+        filter.distance = distance;
+        this.setState({ filter });
+        this.props.updateFilter(filter);
+    };
+
     render() {
         const {
             openClose,
-            distanceRating: dr,
+            distance,
             slotTypes,
             customerRatings,
         } = this.state.filter;
-        const { handleCheck, handleDR, handleSlot, handleRating } = this;
+        const { handleCheck,  handleSlot, handleRating } = this;
         const { items, slotType, customerRating } = this.formData;
         const { classes, theme } = this.props;
         return (
@@ -121,6 +116,38 @@ class FilterCard extends Component {
                         margin: "auto",
                     }}
                 >
+                    <Grid item style={{ width: "100%" }}>
+                        <Box
+                            boxShadow={0}
+                            style={{
+                                backgroundColor: "white",
+                                width: "100%",
+                                marginTop: 23,
+                            }}
+                            p={3}
+                            borderRadius={5}
+                        >
+                            <Typography variant="body1">
+                                Choose Your Radius(in Km)..
+                            </Typography>
+                            <Slider
+                                value={distance}
+                                aria-labelledby="discrete-slider-always"
+                                step={0.05}
+                                onChange={this.handleChange}
+                                min={1}
+                                max={5}
+                                marks={[
+                                    { value: 1, label: "1 km" },
+                                    { value: 2 },
+                                    { value: 3 },
+                                    { value: 4 },
+                                    { value: 5, label: "5 km" },
+                                ]}
+                                valueLabelDisplay="on"
+                            />
+                        </Box>
+                    </Grid>
                     <Grid
                         item
                         container

@@ -27,7 +27,7 @@ const useStyles = (theme) => ({
 class Shops extends Component {
     state = {
         shopData: [],
-        distance: 3,
+        distance: 5,
         isLoading: false,
         message: "An Error Occured",
         filter: {
@@ -35,6 +35,7 @@ class Shops extends Component {
             items: [],
             slotTypes: { Morning: true, Afternoon: true, Evening: true },
             customerRatings: { "4": false, "3": false },
+            distance:3,
         },
     };
 
@@ -136,14 +137,17 @@ class Shops extends Component {
         };
         if (!filter.openClose.showAll) list = list.filter((c) => openedNow(c));
 
-        //Items Based 
+        //Items Based
         if (filter.items.length != 0)
-            list = list.filter(shop => {
+            list = list.filter((shop) => {
                 for (let tag of shop.tags) {
                     if (filter.items.includes(tag)) return true;
                 }
                 return false;
             });
+
+        //Distance Filter
+        list = list.filter((c) => c.distancemetric <= filter.distance);
 
         //Period Based(Must filter at last)
         let newList = [];
@@ -168,23 +172,17 @@ class Shops extends Component {
 
     getItemList = (shopList) => {};
 
-    handleChange = (event, newValue) => {
-        const distance = newValue;
-        this.setState({ distance });
-        this.updateShopList();
-    };
-
     handleAddress = () => {
         this.updateShopList();
     };
 
-    getItemList = shopList => {
+    getItemList = (shopList) => {
         let itemList = [];
         for (const shop of shopList) {
-            itemList = [...shop.tags , ...itemList];
+            itemList = [...shop.tags, ...itemList];
         }
         return Array.from(new Set(itemList));
-    }
+    };
 
     render() {
         const shopList = this.filterList();
@@ -210,32 +208,6 @@ class Shops extends Component {
                         direction="column"
                         alignItems="center"
                     >
-                        <Grid item style={{ width: "100%" }}>
-                            <Box
-                                boxShadow={5}
-                                style={{
-                                    backgroundColor: "white",
-                                    width: "100%",
-                                    marginTop: 23,
-                                }}
-                                p={3}
-                                borderRadius={5}
-                            >
-                                <Typography variant="body1">
-                                    Choose Your Radius(in Km)..
-                                </Typography>
-                                <Slider
-                                    value={distance}
-                                    aria-labelledby="discrete-slider-always"
-                                    step={1}
-                                    onChange={this.handleChange}
-                                    min={1}
-                                    max={5}
-                                    marks={[{value:1,label:"1 km"},{value:2},{value:3},{value:4},{value:5,label:'5 km'}]}
-                                    valueLabelDisplay="on"
-                                />
-                            </Box>
-                        </Grid>
                         <Grid
                             item
                             container
@@ -244,7 +216,10 @@ class Shops extends Component {
                             alignItems="center"
                             style={{ width: "100%" }}
                         >
-                            <FilterCard updateFilter={this.updateFilter} itemList={this.getItemList(this.state.shopData)} />
+                            <FilterCard
+                                updateFilter={this.updateFilter}
+                                itemList={this.getItemList(this.state.shopData)}
+                            />
                         </Grid>
                     </Grid>
                     <Grid
@@ -286,7 +261,12 @@ class Shops extends Component {
                                 style={{ width: "100%" }}
                             >
                                 {shopList.length == 0 ? (
-                                    <Grid container xs={12} justify="center" direction="row">
+                                    <Grid
+                                        container
+                                        xs={12}
+                                        justify="center"
+                                        direction="row"
+                                    >
                                         <Grid item>
                                             <Typography
                                                 variant="h5"
