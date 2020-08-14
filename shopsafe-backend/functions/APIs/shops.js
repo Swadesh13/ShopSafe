@@ -130,6 +130,7 @@ exports.getShopDetail = (request, response) => {
 
 exports.updateShopDetails = (request, response) => {
   let document = db.collection("shops").doc(`${request.user.email}`);
+  delete request.body.isShop;
   document
     .update(request.body)
     .then(() => {

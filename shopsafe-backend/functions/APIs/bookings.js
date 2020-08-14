@@ -664,18 +664,67 @@ exports.approveBooking = (request, response) => {
     var bookingId = requestData[0];
     var customerOtp = requestData[1];
 
+    var bookingDetails = [];
+    var arrivalTime, deliveryTime, suffix;
     db.collection("bookings")
       .doc(bookingId)
       .get()
       .then((doc) => {
-        if (doc.data().otp == customerOtp) {
-          db.doc(`/bookings/${bookingId}`).update({
-            status: 2,
+        if (request.user.uid == doc.data().shopId) {
+          if (doc.data().status == 1) {
+            if (doc.data().otp == customerOtp) {
+              db.doc(`/bookings/${bookingId}`).update({
+                status: 2,
+              });
+              suffix = doc.data().arrivalHour >= 12 ? "PM" : "AM";
+              arrivalTime =
+                (doc.data().arrivalHour >= 12
+                  ? doc.data().arrivalHour - 12
+                  : doc.data().arrivalHour) +
+                (doc.data().arrivalMinute > 0
+                  ? ":" + doc.data().arrivalMinute
+                  : "") +
+                " " +
+                suffix;
+              suffix = doc.data().deliveryHour >= 12 ? "PM" : "AM";
+              deliveryTime =
+                (doc.data().deliveryHour >= 12
+                  ? doc.data().deliveryHour - 12
+                  : doc.data().deliveryHour) +
+                (doc.data().deliveryMinute > 0
+                  ? ":" + doc.data().deliveryMinute
+                  : "") +
+                " " +
+                suffix;
+              bookingDetails.push({
+                customerName: doc.data().customerName,
+                purchaseItems: doc.data().purchaseItems,
+                slotGroupBegins: doc.data().slotGroupBegins,
+                slotGroupEnds: doc.data().slotGroupEnds,
+                arrivalHour: doc.data().arrivalHour,
+                arrivalMinute: doc.data().arrivalMinute,
+                deliveryHour: doc.data().deliveryHour,
+                deliveryMinute: doc.data().deliveryMinute,
+                duration: doc.data().duration,
+                arrivalTimeIST: arrivalTime,
+                deliveryTimeIST: deliveryTime,
+              });
+              return response.status(200).json({
+                message: "Transaction completed successfully",
+                bookingDetails: bookingDetails,
+              });
+            } else
+              return response.status(400).json({ message: "Incorrect OTP" });
+          } else {
+            return response
+              .status(400)
+              .json({ message: "Booking already verified/expired" });
+          }
+        } else {
+          return response.status(400).json({
+            message: "This booking ID does not belong to your shop",
           });
-          return response
-            .status(200)
-            .json({ message: "Transaction completed successfully" });
-        } else return response.status(400).json({ message: "Incorrect OTP" });
+        }
       })
       .catch((error) => {
         console.error(error);
