@@ -121,11 +121,7 @@ class Shop extends Component {
             travelDuration,
         } = this.props.data;
         const distance = distancemetric || -1;
-        const imgUrl =
-            imageUrl ||
-            "https://picsum.photos/500/500";
-        //const imgUrl ="https://img.etimg.com/thumb/width-640,height-480,imgsize-789754,resizemode-1,msid-73320353/small-biz/sme-sector/the-kirana-is-a-technology-shop-too/kirana-bccl.jpg";
-        //const { openingTime, closingTime } = shopSchedule;
+        
         return (
             <Grid item>
                 <Box
@@ -158,7 +154,7 @@ class Shop extends Component {
                                             marginTop: 10,
                                             marginLeft: 10,
                                             marginBottom: 10,
-                                            backgroundImage: `url(${imgUrl})`,
+                                            backgroundImage: `url(${imageUrl})`,
                                         }}
                                     >
                                         <Chip

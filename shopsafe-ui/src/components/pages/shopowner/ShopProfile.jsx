@@ -187,8 +187,6 @@ class ShopProfile extends Component {
 
     render() {
         const { shopData: data, data: info, item } = this.state;
-        const imageUrl =
-            "https://img.etimg.com/thumb/width-640,height-480,imgsize-789754,resizemode-1,msid-73320353/small-biz/sme-sector/the-kirana-is-a-technology-shop-too/kirana-bccl.jpg";
         const { classes, themes } = this.props;
         return (
             <React.Fragment>
@@ -219,7 +217,7 @@ class ShopProfile extends Component {
                                         boxShadow={3}
                                         style={{
                                             backgroundImage: `url(${
-                                                data.imgURL || imageUrl
+                                                data.imageUrl
                                             })`,
                                             height: 450,
                                             backgroundSize: "cover",
