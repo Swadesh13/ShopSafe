@@ -79,7 +79,7 @@ class MyBookings extends Component {
         console.log("render the slots",this.state.slotData);
         const { slotData: data } = this.state;
         return (
-            <Grid container spacing={2} justify="flex-start">
+            <Grid container spacing={3} justify="flex-start">
                 {this.state.isLoading ? (
                     <Grid item>
                         <CircularProgress />
@@ -95,33 +95,21 @@ class MyBookings extends Component {
                                 size="large"
                             >{`Active Slots  ${this.numberOfActiveBookngs()}`}</Button>
                         </Grid>
-                        {data.map(
-                            (cards, i) =>
-                                this.isExpired(cards) || (
-                                    <Grid key={i} item md={4} lg={2}>
-                                        <SlotCard
-                                            data={cards}
-                                            isExpired={this.isExpired(cards)}
-                                            handleDelete={this.handleDelete}
-                                        />
-                                    </Grid>
-                                )
-                        )}
-                        <Grid xs={12} item style={{ margin: 6 }}>
-                            <Button
-                                variant="contained"
-                                onClick={this.showPastSlot}
-                                label="See Past Slots"
-                                color="secondary"
-                            >
-                                See Past Slots
-                            </Button>
-                        </Grid>
-                        {this.state.showPastSlot &&
-                            data.map(
+                        <Grid
+                            xs={12}
+                            item
+                            container
+                            spacing={3}
+                            justify={
+                                window.innerWidth < 500
+                                    ? "center"
+                                    : "flex-start"
+                            }
+                        >
+                            {data.map(
                                 (cards, i) =>
-                                    this.isExpired(cards) && (
-                                        <Grid key={i} item sm={4} md={3}>
+                                    this.isExpired(cards) || (
+                                        <Grid key={i} item>
                                             <SlotCard
                                                 data={cards}
                                                 isExpired={this.isExpired(
@@ -132,6 +120,47 @@ class MyBookings extends Component {
                                         </Grid>
                                     )
                             )}
+                        </Grid>
+
+                        <Grid xs={12} item style={{ margin: 6 }}>
+                            <Button
+                                variant="contained"
+                                onClick={this.showPastSlot}
+                                label="See Past Slots"
+                                color="secondary"
+                            >
+                                See Past Slots
+                            </Button>
+                        </Grid>
+                        <Grid
+                            xs={12}
+                            item
+                            container
+                            spacing={3}
+                            justify={
+                                window.innerWidth < 500
+                                    ? "center"
+                                    : "flex-start"
+                            }
+                        >
+                            {this.state.showPastSlot &&
+                                data.map(
+                                    (cards, i) =>
+                                        this.isExpired(cards) && (
+                                            <Grid key={i} item>
+                                                <SlotCard
+                                                    data={cards}
+                                                    isExpired={this.isExpired(
+                                                        cards
+                                                    )}
+                                                    handleDelete={
+                                                        this.handleDelete
+                                                    }
+                                                />
+                                            </Grid>
+                                        )
+                                )}
+                        </Grid>
                     </React.Fragment>
                 )}
             </Grid>

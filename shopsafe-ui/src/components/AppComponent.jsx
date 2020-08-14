@@ -173,7 +173,7 @@ class CustomFooter extends Component {
                         justify="space-evenly"
                         spacing={2}
                         alignItems="center"
-                        xs={3}
+                        sm={3}
                     >
                         <Grid item>
                             <img
@@ -194,7 +194,7 @@ class CustomFooter extends Component {
                         justify="center"
                         alignItems="center"
                         direction="column"
-                        xs={3}
+                        sm={3}
                     >
                         <Link href="#">Home</Link>
                         <Link href="#">Privacy Policy</Link>
@@ -206,7 +206,7 @@ class CustomFooter extends Component {
                         justify="center"
                         alignItems="center"
                         direction="column"
-                        xs={3}
+                        sm={3}
                     >
                         <Link href="#">Helps and Support</Link>
                         <Link href="#">Terms and Condition</Link>
@@ -217,7 +217,7 @@ class CustomFooter extends Component {
                         justify="center"
                         alignItems="center"
                         direction="column"
-                        xs={3}
+                        sm={3}
                     >
                         <Box
                             borderRadius={5}
