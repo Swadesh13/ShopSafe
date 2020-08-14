@@ -1,7 +1,7 @@
 # eQ
 Queue for the new normal
 
-![logo](./logo-eq.png)
+![logo](./eQ-logo-circle.png)
 
 ## Table of Contents
 * [General Info](#general-info)
@@ -19,7 +19,7 @@ Members: [SK Shahnawaz](https://github.com/skshahnawaz), [Swadesh Jana](https://
 Institute Name: Jadavpur University
 
 ## Deployed Website
-URL: 
+URL: https://equeue.netlify.app
 
 ## Problem 
 
