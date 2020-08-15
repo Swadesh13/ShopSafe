@@ -129,7 +129,7 @@ class SignIn extends Component {
             );
         } catch (ex) {
             console.log(ex);
-            if (ex.response.data.message) alert(ex.response.data.message);
+            if (ex.response.data.general) alert(ex.response.data.general);
             else {
                 const errors = { ...ex.response.data };
                 console.log("error", ex.response);
