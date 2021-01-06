@@ -12,7 +12,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "apexcharts": "^3.19.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "markdown-to-jsx": "^6.11.4",
     "password-hash": "^1.2.2",
     "qrcode.react": "^1.0.0",
